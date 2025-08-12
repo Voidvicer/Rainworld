@@ -1,0 +1,43 @@
+# Laravel files
+/vendor/
+/node_modules/
+/public/storage
+/storage/*.key
+/storage/app/public/
+/storage/logs/
+/.env
+/.env.backup
+/.phpunit.result.cache
+/Homestead.json
+/Homestead.yaml
+/npm-debug.log
+/yarn-error.log
+
+# Database
+/database/database.sqlite
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Build files
+/public/build/
+/public/hot
+
+# Cache files
+/bootstrap/cache/*.php
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
