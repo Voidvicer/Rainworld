@@ -43,6 +43,7 @@
         <th class="px-4 py-2">Qty</th>
         <th class="px-4 py-2 text-right">Total</th>
         <th class="px-4 py-2">Status</th>
+        <th class="px-4 py-2">Update</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-slate-100">
@@ -53,7 +54,22 @@
           <td class="px-4 py-2">{{ $t->trip->date }} {{ $t->trip->depart_time }} ({{ $t->trip->origin }}→{{ $t->trip->destination }})</td>
           <td class="px-4 py-2 text-center">{{ $t->quantity }}</td>
           <td class="px-4 py-2 text-right font-medium">${{ number_format($t->total_amount,2) }}</td>
-          <td class="px-4 py-2"><span class="px-2 py-1 rounded-full text-xs font-semibold {{ $t->status==='paid' ? 'bg-emerald-100 text-emerald-700':'bg-slate-200 text-slate-700' }}">{{ $t->status }}</span></td>
+          <td class="px-4 py-2"><span class="px-2 py-1 rounded-full text-xs font-semibold 
+            @if($t->status==='confirmed') bg-emerald-100 text-emerald-700
+            @elseif($t->status==='canceled') bg-rose-100 text-rose-700
+            @elseif($t->status==='completed') bg-indigo-100 text-indigo-700
+            @elseif($t->status==='expired') bg-gray-100 text-gray-700
+            @else bg-amber-100 text-amber-700 @endif">{{ $t->status }}</span></td>
+          <td class="px-4 py-2">
+            <form method="POST" action="{{ route('manage.ferry.tickets.status',$t) }}" class="flex items-center gap-2">@csrf @method('PATCH')
+              <select name="status" class="rounded border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-xs">
+                @foreach(['confirmed','canceled','completed','expired'] as $s)
+                  <option value="{{ $s }}" @if($t->status==$s) selected @endif>{{ ucfirst($s) }}</option>
+                @endforeach
+              </select>
+              <button class="text-[11px] font-semibold px-3 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white">Save</button>
+            </form>
+          </td>
         </tr>
       @endforeach
     </tbody>

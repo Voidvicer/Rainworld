@@ -71,4 +71,10 @@ class ThemeParkTicketController extends Controller
         $tickets = ThemeParkTicket::with('user')->latest()->paginate(20);
         return view('manage.park.reports', compact('tickets'));
     }
+
+    public function updateStatus(Request $request, ThemeParkTicket $themeParkTicket){
+        $request->validate(['status' => 'required|in:confirmed,canceled,completed,expired']);
+        $themeParkTicket->update(['status' => $request->status]);
+        return back()->with('success', 'Ticket status updated.');
+    }
 }

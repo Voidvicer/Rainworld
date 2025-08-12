@@ -37,7 +37,7 @@
     <form method="GET" class="flex items-end gap-4 flex-wrap">
       <div>
         <label class="label text-slate-700 dark:text-slate-300">Select Date</label>
-        <input type="date" name="date" value="{{ $selectedDate ?? '' }}" class="input bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200 w-48" onchange="this.form.submit()">
+        <input type="date" name="date" value="{{ $selectedDate ?? '' }}" class="input bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200 w-48" min="{{ date('Y-m-d') }}" onchange="this.form.submit()">
       </div>
       <div class="pt-2">
         <a href="{{ route('ferry.trips.index') }}" class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">Clear Filter</a>
@@ -77,46 +77,79 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-100 dark:divide-slate-700 bg-white/60 dark:bg-slate-900/20">
-        @foreach($trips as $trip)
-        <tr class="hover:bg-indigo-50/60 dark:hover:bg-indigo-900/20 transition-colors group">
-          <td class="px-6 py-4 text-center">
-            <input type="checkbox" class="trip-checkbox {{ $trip->type }}-trip w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" 
-                   data-type="{{ $trip->type }}" 
-                   data-time="{{ $trip->departure_time }}" 
-                   data-price="{{ $trip->price }}">
-          </td>
-          <td class="px-6 py-4">
-            @if($trip->type === 'departure')
-            <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 rounded text-xs font-semibold">Departure</span>
-            @else
-            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 rounded text-xs font-semibold">Return</span>
-            @endif
-          </td>
-          <td class="px-6 py-4 text-slate-700 dark:text-slate-300">
-            <span class="font-mono bg-slate-50 dark:bg-slate-800/50 rounded-md px-2 py-1">{{ date('H:i', strtotime($trip->departure_time)) }}</span>
-          </td>
-          <td class="px-6 py-4 text-slate-700 dark:text-slate-300">
-            <div class="flex items-center gap-2">
-              <span class="font-medium">{{ $trip->origin }}</span>
-              <span class="text-slate-400 dark:text-slate-500">→</span>
-              <span class="font-medium">{{ $trip->destination }}</span>
+        @if(!$selectedDate)
+        <tr>
+          <td colspan="7" class="px-6 py-16 text-center text-slate-500 dark:text-slate-400">
+            <div class="flex flex-col items-center gap-4">
+              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-100 to-teal-100 dark:from-indigo-900/50 dark:to-teal-900/50 grid place-content-center text-3xl">📅</div>
+              <div>
+                <p class="text-lg font-medium text-slate-700 dark:text-slate-300">Select a Travel Date</p>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                  Choose your travel date above to see available ferry schedules for departures and returns
+                </p>
+              </div>
             </div>
           </td>
-          <td class="px-6 py-4 text-center">
-            @php
-            $remaining = $trip->remainingSeats();
-            @endphp
-            <span class="font-semibold {{ $remaining > 10 ? 'text-emerald-600 dark:text-emerald-400' : ($remaining > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400') }}">
-              {{ $remaining }}
-            </span>
-          </td>
-          <td class="px-6 py-4 text-right font-bold text-lg text-slate-800 dark:text-slate-200">${{ number_format($trip->price, 2) }}</td>
-          <td class="px-6 py-4 text-center">
-            <input type="number" class="quantity-input w-20 rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm" 
-                   value="1" min="1" max="{{ $trip->remainingSeats() }}" disabled>
-          </td>
         </tr>
-        @endforeach
+        @else
+          @forelse($trips as $trip)
+          <tr class="hover:bg-indigo-50/60 dark:hover:bg-indigo-900/20 transition-colors group">
+            <td class="px-6 py-4 text-center">
+              <input type="checkbox" class="trip-checkbox {{ $trip->trip_type }}-trip w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" 
+                     data-type="{{ $trip->trip_type }}" 
+                     data-time="{{ $trip->depart_time }}" 
+                     data-price="{{ $trip->price }}"
+                     data-trip-id="{{ $trip->id }}"
+                     data-origin="{{ $trip->origin }}"
+                     data-destination="{{ $trip->destination }}">
+            </td>
+            <td class="px-6 py-4">
+              @if($trip->trip_type === 'departure')
+              <span class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 rounded text-xs font-semibold">Departure</span>
+              @else
+              <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 rounded text-xs font-semibold">Return</span>
+              @endif
+            </td>
+            <td class="px-6 py-4 text-slate-700 dark:text-slate-300">
+              <span class="font-mono bg-slate-50 dark:bg-slate-800/50 rounded-md px-2 py-1">{{ date('H:i', strtotime($trip->depart_time)) }}</span>
+            </td>
+            <td class="px-6 py-4 text-slate-700 dark:text-slate-300">
+              <div class="flex items-center gap-2">
+                <span class="font-medium">{{ $trip->origin }}</span>
+                <span class="text-slate-400 dark:text-slate-500">→</span>
+                <span class="font-medium">{{ $trip->destination }}</span>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-center">
+              @php
+              $remaining = $trip->remainingSeats();
+              @endphp
+              <span class="font-semibold {{ $remaining > 10 ? 'text-emerald-600 dark:text-emerald-400' : ($remaining > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400') }}">
+                {{ $remaining }}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-right font-bold text-lg text-slate-800 dark:text-slate-200">${{ number_format($trip->price, 2) }}</td>
+            <td class="px-6 py-4 text-center">
+              <input type="number" class="quantity-input w-20 rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm" 
+                     value="1" min="1" max="{{ $trip->remainingSeats() }}" disabled>
+            </td>
+          </tr>
+          @empty
+          <tr>
+            <td colspan="7" class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+              <div class="flex flex-col items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 grid place-content-center text-2xl">⛴️</div>
+                <div>
+                  <p class="font-medium">No ferry trips available</p>
+                  <p class="text-sm text-slate-400 dark:text-slate-500">
+                    No trips scheduled for {{ date('F j, Y', strtotime($selectedDate)) }}
+                  </p>
+                </div>
+              </div>
+            </td>
+          </tr>
+          @endforelse
+        @endif
       </tbody>
     </table>
   </div>
@@ -179,12 +212,13 @@ function processBooking() {
     const row = checkbox.closest('tr');
     const quantity = parseInt(row.querySelector('.quantity-input').value);
     bookingData.trips.push({
+      trip_id: parseInt(checkbox.dataset.tripId),
       type: 'departure',
       time: checkbox.dataset.time,
       price: parseFloat(checkbox.dataset.price),
       quantity: quantity,
-      origin: 'Male\' City',
-      destination: 'Picnic Island'
+      origin: checkbox.dataset.origin,
+      destination: checkbox.dataset.destination
     });
   });
   
@@ -193,12 +227,13 @@ function processBooking() {
     const row = checkbox.closest('tr');
     const quantity = parseInt(row.querySelector('.quantity-input').value);
     bookingData.trips.push({
+      trip_id: parseInt(checkbox.dataset.tripId),
       type: 'return',
       time: checkbox.dataset.time,
       price: parseFloat(checkbox.dataset.price),
       quantity: quantity,
-      origin: 'Picnic Island',
-      destination: 'Male\' City'
+      origin: checkbox.dataset.origin,
+      destination: checkbox.dataset.destination
     });
   });
   

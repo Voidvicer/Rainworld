@@ -36,14 +36,38 @@ class SampleDataSeeder extends Seeder
         Room::create(['hotel_id'=>$hotel3->id,'name'=>'Overwater Bungalow','type'=>'bungalow','capacity'=>2,'total_rooms'=>8,'price_per_night'=>320.00,'amenities'=>['AC','WiFi','Glass Floor','Breakfast']]);
         Room::create(['hotel_id'=>$hotel3->id,'name'=>'Signature Panorama Suite','type'=>'suite','capacity'=>2,'total_rooms'=>2,'price_per_night'=>450.00,'amenities'=>['AC','WiFi','Panoramic Deck','Butler']]);
 
-        // Create multiple ferry departure times per day for next 5 days
-        $times = ['08:00','09:30','11:00','13:30'];
-        for ($i=0;$i<5;$i++){
-            foreach($times as $t){
+        // Create ferry schedules for next 30 days with proper departure and return times
+        $departureTimes = ['07:00', '08:00', '09:00', '10:00'];
+        $returnTimes = ['14:00', '16:00', '18:00', '20:00'];
+        
+        for ($i = 0; $i < 30; $i++) {
+            $date = now()->addDays($i)->toDateString();
+            
+            // Create departure trips (Male' City to Picnic Island)
+            foreach ($departureTimes as $time) {
                 FerryTrip::create([
-                    'date'=> now()->addDays($i)->toDateString(),'depart_time'=>$t,
-                    'origin'=>"Male' City",'destination'=>'Picnic Island','capacity'=>50,'price'=>15.00,
-                    'blocked'=>false
+                    'date' => $date,
+                    'trip_type' => 'departure',
+                    'depart_time' => $time,
+                    'origin' => "Male' City",
+                    'destination' => 'Picnic Island',
+                    'capacity' => 50,
+                    'price' => 15.00,
+                    'blocked' => false
+                ]);
+            }
+            
+            // Create return trips (Picnic Island to Male' City)
+            foreach ($returnTimes as $time) {
+                FerryTrip::create([
+                    'date' => $date,
+                    'trip_type' => 'return',
+                    'depart_time' => $time,
+                    'origin' => 'Picnic Island',
+                    'destination' => "Male' City",
+                    'capacity' => 50,
+                    'price' => 15.00,
+                    'blocked' => false
                 ]);
             }
         }

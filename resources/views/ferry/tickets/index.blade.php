@@ -49,10 +49,12 @@
             <td class="px-6 py-4 text-center text-slate-700 dark:text-slate-300 font-semibold">{{ $t->quantity }}</td>
             <td class="px-6 py-4 text-center">
               <span class="px-3 py-1 rounded-full text-xs font-semibold 
-                {{ $t->status==='paid' ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-200 dark:ring-emerald-800' : 
-                   ($t->status==='refunded' ? 'bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-400 ring-1 ring-rose-200 dark:ring-rose-800' : 
-                   'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800') }}">
-                {{ $t->status === 'refunded' ? 'Cancelled' : ucfirst($t->status) }}
+                @if($t->status==='confirmed') bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-200 dark:ring-emerald-800
+                @elseif($t->status==='canceled') bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-400 ring-1 ring-rose-200 dark:ring-rose-800
+                @elseif($t->status==='completed') bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 ring-1 ring-indigo-200 dark:ring-indigo-800
+                @elseif($t->status==='expired') bg-gray-100 dark:bg-gray-900/50 text-gray-700 dark:text-gray-400 ring-1 ring-gray-200 dark:ring-gray-800
+                @else bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800 @endif">
+                {{ ucfirst($t->status) }}
               </span>
             </td>
             <td class="px-6 py-4 text-right font-bold text-lg text-slate-800 dark:text-slate-200">${{ number_format($t->total_amount,2) }}</td>

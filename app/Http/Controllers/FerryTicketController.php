@@ -135,16 +135,17 @@ class FerryTicketController extends Controller
 
         // Create tickets for each trip
         foreach ($purchaseData['trips'] as $tripData) {
-            // Find or create the ferry trip for this date/time/route
-            $trip = FerryTrip::firstOrCreate([
-                'date' => $purchaseData['date'],
-                'depart_time' => $tripData['time'],
-                'origin' => $tripData['origin'],
-                'destination' => $tripData['destination']
-            ], [
-                'price' => $tripData['price'],
-                'capacity' => 50
-            ]);
+            // Find the ferry trip by ID
+            $trip = FerryTrip::find($tripData['trip_id']);
+            
+            if (!$trip) {
+                return back()->withErrors(['error' => 'One or more selected trips are no longer available.']);
+            }
+            
+            // Check if there are enough seats
+            if ($trip->remainingSeats() < $tripData['quantity']) {
+                return back()->withErrors(['error' => 'Not enough seats remaining for ' . $trip->origin . ' to ' . $trip->destination . ' at ' . $trip->depart_time . '.']);
+            }
 
             $total = $tripData['price'] * $tripData['quantity'];
             $ticket = FerryTicket::create([
@@ -195,5 +196,11 @@ class FerryTicketController extends Controller
     public function reports(){
         $tickets = FerryTicket::with('trip','user')->latest()->paginate(20);
         return view('manage.ferry.reports', compact('tickets'));
+    }
+
+    public function updateStatus(Request $request, FerryTicket $ferryTicket){
+        $request->validate(['status' => 'required|in:confirmed,canceled,completed,expired']);
+        $ferryTicket->update(['status' => $request->status]);
+        return back()->with('success', 'Ferry ticket status updated.');
     }
 }

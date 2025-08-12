@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FerryTrip extends Model
 {
     use HasFactory;
-    protected $fillable = ['date','depart_time','origin','destination','capacity','price','blocked'];
+    protected $fillable = ['date','trip_type','depart_time','origin','destination','capacity','price','blocked'];
 
     public function tickets(){ return $this->hasMany(FerryTicket::class); }
 

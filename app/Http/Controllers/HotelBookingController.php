@@ -73,9 +73,17 @@ class HotelBookingController extends Controller
         return back()->with('success','Booking canceled.');
     }
 
-    public function manage(){
-        $bookings = Booking::with('room.hotel','user')->latest()->paginate(20);
-        return view('manage.bookings.index', compact('bookings'));
+    public function manage(Request $request){
+        $query = Booking::with('room.hotel','user');
+        
+        if($request->filled('status')){
+            $query->where('status', $request->get('status'));
+        }
+        
+        $bookings = $query->latest()->paginate(20);
+        $currentStatus = $request->get('status');
+        
+        return view('manage.bookings.index', compact('bookings', 'currentStatus'));
     }
 
     public function updateStatus(Request $request, Booking $booking){

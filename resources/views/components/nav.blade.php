@@ -13,8 +13,8 @@
           @foreach($nav as $item)
             <a href="{{ route($item[1]) }}" class="px-3 py-1 rounded transition {{ request()->routeIs($item[1]) ? 'bg-white/20' : 'hover:bg-white/10' }}">{{ $item[0] }}</a>
           @endforeach
-          @role('hotel_manager|admin')<a href="{{ route('manage.bookings') }}" class="px-3 py-1 rounded transition {{ request()->routeIs('manage.bookings') ? 'bg-white/20':'hover:bg-white/10' }}">Hotel Mgmt</a>@endrole
-          @role('ferry_staff|admin')<a href="{{ route('manage.ferry.reports') }}" class="px-3 py-1 rounded transition {{ request()->routeIs('manage.ferry.*') ? 'bg-white/20':'hover:bg-white/10' }}">Ferry Ops</a>@endrole
+          @role('hotel_manager|admin')<a href="{{ route('manage.hotel.dashboard') }}" class="px-3 py-1 rounded transition {{ request()->routeIs('manage.hotel.*') || request()->routeIs('manage.bookings') ? 'bg-white/20':'hover:bg-white/10' }}">Hotel Mgmt</a>@endrole
+          @role('ferry_staff|admin')<a href="{{ route('manage.ferry.dashboard') }}" class="px-3 py-1 rounded transition {{ request()->routeIs('manage.ferry*') ? 'bg-white/20':'hover:bg-white/10' }}">Ferry Ops</a>@endrole
           @role('theme_staff|admin')<a href="{{ route('manage.park.reports') }}" class="px-3 py-1 rounded transition {{ request()->routeIs('manage.park.*') ? 'bg-white/20':'hover:bg-white/10' }}">Park Ops</a>@endrole
           @role('admin')<a href="{{ route('admin.index') }}" class="px-3 py-1 rounded transition {{ request()->routeIs('admin.*') ? 'bg-white/20':'hover:bg-white/10' }}">Admin</a>@endrole
         @endauth
@@ -37,8 +37,8 @@
         @foreach($nav as $item)
           <a href="{{ route($item[1]) }}" class="block px-3 py-2 rounded {{ request()->routeIs($item[1]) ? 'bg-white/15' : 'hover:bg-white/10' }}">{{ $item[0] }}</a>
         @endforeach
-        @role('hotel_manager|admin')<a href="{{ route('manage.bookings') }}" class="block px-3 py-2 rounded {{ request()->routeIs('manage.bookings') ? 'bg-white/15':'hover:bg-white/10' }}">Hotel Management</a>@endrole
-        @role('ferry_staff|admin')<a href="{{ route('manage.ferry.reports') }}" class="block px-3 py-2 rounded {{ request()->routeIs('manage.ferry.*') ? 'bg-white/15':'hover:bg-white/10' }}">Ferry Operations</a>@endrole
+        @role('hotel_manager|admin')<a href="{{ route('manage.hotel.dashboard') }}" class="block px-3 py-2 rounded {{ request()->routeIs('manage.hotel.*') || request()->routeIs('manage.bookings') ? 'bg-white/15':'hover:bg-white/10' }}">Hotel Management</a>@endrole
+        @role('ferry_staff|admin')<a href="{{ route('manage.ferry.dashboard') }}" class="block px-3 py-2 rounded {{ request()->routeIs('manage.ferry*') ? 'bg-white/15':'hover:bg-white/10' }}">Ferry Operations</a>@endrole
         @role('theme_staff|admin')<a href="{{ route('manage.park.reports') }}" class="block px-3 py-2 rounded {{ request()->routeIs('manage.park.*') ? 'bg-white/15':'hover:bg-white/10' }}">Park Operations</a>@endrole
         @role('admin')<a href="{{ route('admin.index') }}" class="block px-3 py-2 rounded {{ request()->routeIs('admin.*') ? 'bg-white/15':'hover:bg-white/10' }}">Admin</a>@endrole
       @else

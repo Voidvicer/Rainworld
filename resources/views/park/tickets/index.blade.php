@@ -26,18 +26,23 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
           <div>
             <label class="label text-slate-700 dark:text-slate-300">Visit Date</label>
-            <input type="date" name="visit_date" value="{{ request('date') }}" class="input bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200" required>
+            <input type="date" name="visit_date" value="{{ request('date') }}" class="input bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200" required min="{{ date('Y-m-d') }}">
           </div>
           <div>
             <label class="label text-slate-700 dark:text-slate-300">Quantity</label>
             <input type="number" name="quantity" class="input bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-200 w-full" min="1" value="1" required oninput="calcTotal()">
           </div>
           <div>
-            <button class="btn-primary w-full bg-gradient-to-r from-indigo-600 to-teal-600 hover:from-indigo-500 hover:to-teal-500 shadow-md transition-all transform hover:scale-[1.02] active:scale-[0.98]">
-              Proceed to Payment
+            <button class="w-full h-10 px-4 py-2 bg-gradient-to-r from-indigo-600 to-teal-600 hover:from-indigo-500 hover:to-teal-500 text-white font-semibold rounded-lg shadow-md transition-all transform hover:scale-[1.02] active:scale-[0.98] text-sm">
+              Pay Now
             </button>
           </div>
-          <div class="text-sm text-slate-600 dark:text-slate-400 flex items-center justify-center bg-slate-50 dark:bg-slate-900/50 rounded-lg px-3 py-2 border border-slate-200 dark:border-slate-700" id="estTotal"></div>
+          <div class="h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-900/50 rounded-lg px-3 py-2 border border-slate-200 dark:border-slate-700" id="estTotal">
+            <div class="flex items-center gap-2">
+              <span class="text-slate-500 dark:text-slate-400 text-xs">Total:</span>
+              <span class="font-bold text-indigo-600 dark:text-indigo-400">$50.00</span>
+            </div>
+          </div>
         </div>
       </form>
     </div>
@@ -72,7 +77,12 @@
           <td class="px-6 py-4 text-slate-700 dark:text-slate-300 font-medium">{{ $t->visit_date }}</td>
           <td class="px-6 py-4 text-center text-slate-700 dark:text-slate-300 font-semibold">{{ $t->quantity }}</td>
           <td class="px-6 py-4 text-center">
-            <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $t->status==='paid' ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-200 dark:ring-emerald-800' : 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800' }}">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold 
+              @if($t->status==='confirmed') bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-200 dark:ring-emerald-800
+              @elseif($t->status==='canceled') bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-400 ring-1 ring-rose-200 dark:ring-rose-800
+              @elseif($t->status==='completed') bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 ring-1 ring-indigo-200 dark:ring-indigo-800
+              @elseif($t->status==='expired') bg-gray-100 dark:bg-gray-900/50 text-gray-700 dark:text-gray-400 ring-1 ring-gray-200 dark:ring-gray-800
+              @else bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800 @endif">
               {{ ucfirst($t->status) }}
             </span>
           </td>
@@ -113,6 +123,10 @@
     const total = 50 * parseInt(qty);
     document.getElementById('estTotal').innerHTML = '<div class="flex items-center gap-2"><span class="text-slate-500 dark:text-slate-400 text-xs">Total:</span><span class="font-bold text-indigo-600 dark:text-indigo-400">$'+total.toFixed(2)+'</span></div>';
   }
-  calcTotal();
+  
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    calcTotal();
+  });
 </script>
 @endsection
