@@ -77,7 +77,6 @@
                         @if($role->name === 'admin') bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400
                         @elseif($role->name === 'hotel_manager') bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400
                         @elseif($role->name === 'ferry_staff') bg-cyan-100 dark:bg-cyan-900/50 text-cyan-700 dark:text-cyan-400
-                        @elseif($role->name === 'theme_staff') bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400
                         @else bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400 @endif">
                         {{ ucfirst(str_replace('_', ' ', $role->name)) }}
                       </span>
@@ -97,8 +96,10 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
                   <div class="flex items-center justify-center gap-2">
-                    <a href="{{ route('admin.users.edit', $user) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors">
-                      Edit
+                    <a href="{{ route('admin.users.edit', $user) }}" class="group relative bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 inline-flex items-center gap-1">
+                      <span>✏️</span>
+                      <span>Edit</span>
+                      <div class="absolute inset-0 bg-white/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </a>
                     @if($user->id !== auth()->id())
                       <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="inline" 

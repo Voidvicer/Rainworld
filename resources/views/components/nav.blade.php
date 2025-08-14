@@ -2,20 +2,21 @@
   <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-6">
       <a href="{{ route('home') }}" class="font-semibold tracking-wide text-lg flex items-center gap-2">
-        <span>🏝️</span><span>Picnic Park</span>
+        <span>🏝️</span><span>Rainworld</span>
       </a>
       <button @click="open=!open" class="md:hidden focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1 bg-white/10">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
       </button>
       <div class="hidden md:flex gap-1 text-sm font-medium">
         @auth
-          @php($nav=[["Hotels","hotels.index"],["Ferry","ferry.trips.index"],["Activities","activities.public"],["Park Tickets","park.tickets.index"],["Bookings","bookings.index"]])
+          @php
+            $nav = [["Hotels","hotels.index"],["Ferry","ferry.trips.index"],["Bookings","bookings.index"]];
+          @endphp
           @foreach($nav as $item)
             <a href="{{ route($item[1]) }}" class="px-3 py-1 rounded transition {{ request()->routeIs($item[1]) ? 'bg-white/20' : 'hover:bg-white/10' }}">{{ $item[0] }}</a>
           @endforeach
           @role('hotel_manager|admin')<a href="{{ route('manage.hotel.dashboard') }}" class="px-3 py-1 rounded transition {{ request()->routeIs('manage.hotel.*') || request()->routeIs('manage.bookings') ? 'bg-white/20':'hover:bg-white/10' }}">Hotel Mgmt</a>@endrole
           @role('ferry_staff|admin')<a href="{{ route('manage.ferry.dashboard') }}" class="px-3 py-1 rounded transition {{ request()->routeIs('manage.ferry*') ? 'bg-white/20':'hover:bg-white/10' }}">Ferry Ops</a>@endrole
-          @role('theme_staff|admin')<a href="{{ route('manage.park.reports') }}" class="px-3 py-1 rounded transition {{ request()->routeIs('manage.park.*') ? 'bg-white/20':'hover:bg-white/10' }}">Park Ops</a>@endrole
           @role('admin')<a href="{{ route('admin.index') }}" class="px-3 py-1 rounded transition {{ request()->routeIs('admin.*') ? 'bg-white/20':'hover:bg-white/10' }}">Admin</a>@endrole
         @endauth
       </div>
@@ -39,7 +40,6 @@
         @endforeach
         @role('hotel_manager|admin')<a href="{{ route('manage.hotel.dashboard') }}" class="block px-3 py-2 rounded {{ request()->routeIs('manage.hotel.*') || request()->routeIs('manage.bookings') ? 'bg-white/15':'hover:bg-white/10' }}">Hotel Management</a>@endrole
         @role('ferry_staff|admin')<a href="{{ route('manage.ferry.dashboard') }}" class="block px-3 py-2 rounded {{ request()->routeIs('manage.ferry*') ? 'bg-white/15':'hover:bg-white/10' }}">Ferry Operations</a>@endrole
-        @role('theme_staff|admin')<a href="{{ route('manage.park.reports') }}" class="block px-3 py-2 rounded {{ request()->routeIs('manage.park.*') ? 'bg-white/15':'hover:bg-white/10' }}">Park Operations</a>@endrole
         @role('admin')<a href="{{ route('admin.index') }}" class="block px-3 py-2 rounded {{ request()->routeIs('admin.*') ? 'bg-white/15':'hover:bg-white/10' }}">Admin</a>@endrole
       @else
         <a href="{{ route('login') }}" class="block px-3 py-2 rounded hover:bg-white/10">Login</a>

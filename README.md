@@ -1,6 +1,6 @@
-# Theme Park Web App with Laravel
+# Island Resort Management System with Laravel
 
-A comprehensive theme park management system built with Laravel 12, featuring hotel bookings, ferry tickets, theme park tickets, and activity reservations.
+A comprehensive island resort management system built with Laravel 12, featuring hotel bookings and ferry transportation services.
 
 ## 🌟 Features
 
@@ -17,20 +17,9 @@ A comprehensive theme park management system built with Laravel 12, featuring ho
 - QR code ticket generation
 - Ticket cancellation with seat liberation
 
-### 🎡 Theme Park Tickets
-- Day pass and multi-day ticket options
-- QR code generation for entry validation
-- Ticket management and viewing
-
-### 🎯 Activities & Events
-- Activity browsing and booking
-- Schedule management
-- Capacity tracking and availability
-
 ### 👨‍💼 Admin Dashboard
 - Comprehensive booking management
 - Revenue reporting and analytics
-- Ticket validation system
 - User role management
 
 ## 🛠️ Tech Stack
@@ -47,7 +36,7 @@ A comprehensive theme park management system built with Laravel 12, featuring ho
 This is a standard Laravel 12 application with the following key directories:
 
 ```
-Theme-Park-Web-App-with-Laravel/
+Island-Resort-Management-Laravel/
 ├── app/                 # Application logic (Controllers, Models, etc.)
 │   ├── Http/Controllers/
 │   ├── Models/
@@ -65,8 +54,8 @@ Theme-Park-Web-App-with-Laravel/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Voidvicer/Theme-Park-Web-App-with-Laravel.git
-   cd Theme-Park-Web-App-with-Laravel
+   git clone https://github.com/Voidvicer/Island-Resort-Management-Laravel.git
+   cd Island-Resort-Management-Laravel
    ```
 
 2. **Install dependencies and setup**
@@ -95,8 +84,6 @@ Theme-Park-Web-App-with-Laravel/
 - **hotels & rooms**: Hotel inventory management
 - **bookings**: Hotel reservation system
 - **ferry_trips & ferry_tickets**: Ferry transportation
-- **theme_park_tickets**: Park entry tickets
-- **activities & activity_bookings**: Event management
 
 ## 🎫 Key Features Implemented
 
@@ -137,9 +124,8 @@ The application uses SQLite by default for easy setup, but can be configured for
 The application includes comprehensive seeders with:
 - Sample hotels and rooms
 - Ferry trip schedules
-- Theme park ticket types
 - User accounts (admin and regular users)
-- Sample bookings and activities
+- Sample bookings
 
 ## 📝 API Endpoints
 
@@ -147,8 +133,6 @@ The application includes comprehensive seeders with:
 - `/` - Homepage
 - `/hotels` - Hotel listings
 - `/ferry/trips` - Ferry schedules
-- `/park/tickets` - Theme park tickets
-- `/activities` - Available activities
 
 ### Authenticated Routes
 - `/bookings` - User booking history
@@ -181,7 +165,6 @@ For support and questions:
 
 - ✅ Fixed ferry seat counting system
 - ✅ Implemented dynamic trip rendering
-- ✅ Resolved Park Tickets page display issues
 - ✅ Enhanced button styling consistency
 - ✅ Fixed database constraint errors
 - ✅ Improved QR code generation system

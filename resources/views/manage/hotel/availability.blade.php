@@ -11,7 +11,7 @@
             <p class="text-sm text-slate-600 dark:text-slate-400">Real-time room availability across all hotels</p>
           </div>
         </div>
-        <a href="{{ route('admin.hotels.dashboard') }}" class="group relative bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <a href="{{ route('manage.hotel.dashboard') }}" class="group relative bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
           <span class="text-lg">🏨</span>
           <span>Hotel Dashboard</span>
           <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -128,23 +128,13 @@
 </div>
 
 <!-- Quick Actions -->
-<div class="grid gap-4 sm:grid-cols-3">
-  <a href="{{ route('admin.hotels.reports') }}" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
+<div class="grid gap-4 sm:grid-cols-2">
+  <a href="{{ route('manage.hotel.reports.advanced') }}" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/50 grid place-content-center text-xl">📊</div>
       <div>
         <div class="font-semibold text-slate-900 dark:text-slate-100">Booking Reports</div>
         <div class="text-xs text-slate-500 dark:text-slate-400">Detailed booking analytics</div>
-      </div>
-    </div>
-  </a>
-
-  <a href="{{ route('admin.hotels.promotions') }}" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/50 grid place-content-center text-xl">🎯</div>
-      <div>
-        <div class="font-semibold text-slate-900 dark:text-slate-100">Promotions</div>
-        <div class="text-xs text-slate-500 dark:text-slate-400">Manage hotel promotions</div>
       </div>
     </div>
   </a>

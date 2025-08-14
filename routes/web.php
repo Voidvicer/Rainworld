@@ -9,16 +9,19 @@ use App\Http\Controllers\HotelBookingController;
 use App\Http\Controllers\FerryTripController;
 use App\Http\Controllers\FerryTicketController;
 use App\Http\Controllers\TicketValidationController;
-use App\Http\Controllers\ActivityController;
-use App\Http\Controllers\ActivityScheduleController;
-use App\Http\Controllers\ThemeParkTicketController;
-use App\Http\Controllers\ActivityBookingController;
+
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\HotelManagementController;
 use App\Http\Controllers\Admin\FerryManagementController;
 
 Route::get('/', [DashboardController::class, 'home'])->name('home');
+
+// Debug route for testing authentication
+Route::get('/debug-auth', function() {
+    return view('debug-auth');
+})->name('debug.auth');
+
 Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'home'])
     ->middleware(['auth'])
     ->name('dashboard');
@@ -58,17 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ferry/tickets', [FerryTicketController::class, 'index'])->name('ferry.tickets.index');
     Route::delete('/ferry/tickets/{ferry_ticket}', [FerryTicketController::class, 'cancel'])->name('ferry.tickets.cancel');
 
-    Route::get('/park/tickets', [ThemeParkTicketController::class, 'index'])->name('park.tickets.index');
-    Route::post('/park/tickets/prepare', [ThemeParkTicketController::class, 'prepare'])->name('park.tickets.prepare');
-    Route::get('/park/tickets/checkout', [ThemeParkTicketController::class, 'checkout'])->name('park.tickets.checkout');
-    Route::post('/park/tickets', [ThemeParkTicketController::class, 'store'])->name('park.tickets.store');
 
-    Route::get('/activities', [ActivityController::class, 'listPublic'])->name('activities.public');
-    Route::get('/activities/{schedule}/book', [ActivityBookingController::class, 'create'])->name('activity.book.create');
-    Route::post('/activities/{schedule}/book/prepare', [ActivityBookingController::class, 'prepare'])->name('activity.book.prepare');
-    Route::get('/activities/{schedule}/book/checkout', [ActivityBookingController::class, 'checkout'])->name('activity.book.checkout');
-    Route::post('/activities/{schedule}/book', [ActivityBookingController::class, 'store'])->name('activity.book.store');
-    Route::get('/activity-bookings', [ActivityBookingController::class, 'index'])->name('activity.bookings.index');
 });
 
 Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class.':hotel_manager|admin'])->group(function () {
@@ -80,7 +73,15 @@ Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class.':hotel_ma
     // Hotel Management Dashboard for Hotel Staff
     Route::get('manage/hotel/dashboard', [HotelManagementController::class, 'dashboard'])->name('manage.hotel.dashboard');
     Route::get('manage/hotel/availability', [HotelManagementController::class, 'roomAvailability'])->name('manage.hotel.availability');
+    Route::get('manage/hotel/reports', [HotelManagementController::class, 'bookingReports'])->name('manage.hotel.reports');
     Route::get('manage/hotel/reports-advanced', [HotelManagementController::class, 'bookingReports'])->name('manage.hotel.reports.advanced');
+    
+    // Hotel Promotion Management
+    Route::get('manage/hotel/promotions', [HotelManagementController::class, 'promotionManagement'])->name('manage.hotel.promotions');
+    Route::post('manage/hotel/promotions', [HotelManagementController::class, 'storePromotion'])->name('manage.hotel.promotions.store');
+    Route::put('manage/hotel/promotions/{id}', [HotelManagementController::class, 'updatePromotion'])->name('manage.hotel.promotions.update');
+    Route::patch('manage/hotel/promotions/{id}/deactivate', [HotelManagementController::class, 'deactivatePromotion'])->name('manage.hotel.promotions.deactivate');
+    Route::delete('manage/hotel/promotions/{id}', [HotelManagementController::class, 'deletePromotion'])->name('manage.hotel.promotions.delete');
 });
 
 Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class.':ferry_staff|admin'])->group(function () {
@@ -92,12 +93,19 @@ Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class.':ferry_st
     Route::delete('manage/ferry-trips/{ferry_trip}', [FerryTripController::class, 'destroy'])->name('manage.ferry-trips.destroy');
     Route::get('manage/ferry/validate', [TicketValidationController::class, 'ferryForm'])->name('manage.ferry.validate.form');
     Route::post('manage/ferry/validate', [TicketValidationController::class, 'ferryCheck'])->name('manage.ferry.validate.check');
-    Route::get('manage/ferry/reports', [FerryTicketController::class, 'reports'])->name('manage.ferry.reports');
+    Route::post('manage/ferry/bulk-validate', [TicketValidationController::class, 'bulkValidate'])->name('manage.ferry.bulk.validate');
+    Route::post('manage/ferry/issue-pass', [TicketValidationController::class, 'issuePass'])->name('manage.ferry.issue.pass');
+    Route::post('manage/ferry/bulk-issue', [TicketValidationController::class, 'bulkIssuePass'])->name('manage.ferry.bulk.issue');
+    Route::get('manage/ferry/pass/{ticket}', [TicketValidationController::class, 'viewPass'])->name('manage.ferry.pass.view');
+    Route::get('manage/ferry/test-system', [TicketValidationController::class, 'testPassSystem'])->name('manage.ferry.test.system');
+    Route::get('manage/ferry/reports', [FerryManagementController::class, 'tripReports'])->name('manage.ferry.reports');
+    Route::get('manage/ferry/export-trips', [FerryManagementController::class, 'exportTrips'])->name('manage.ferry.export.trips');
+    Route::get('manage/ferry/export-revenue', [FerryManagementController::class, 'exportRevenue'])->name('manage.ferry.export.revenue');
     Route::patch('manage/ferry/tickets/{ferryTicket}/status', [FerryTicketController::class, 'updateStatus'])->name('manage.ferry.tickets.status');
     
     // Ferry Management Dashboard for Ferry Staff
     Route::get('manage/ferry/dashboard', [FerryManagementController::class, 'dashboard'])->name('manage.ferry.dashboard');
-    Route::get('manage/ferry/schedule-advanced', [FerryManagementController::class, 'schedule'])->name('manage.ferry.schedule.advanced');
+    Route::get('manage/ferry/reports', [FerryManagementController::class, 'reports'])->name('manage.ferry.reports');
     Route::get('manage/ferry/passengers-advanced/{trip?}', [FerryManagementController::class, 'passengerLists'])->name('manage.ferry.passengers.advanced');
     Route::patch('manage/ferry/trips/{trip}/status', [FerryManagementController::class, 'updateTripStatus'])->name('manage.ferry.trips.status');
     Route::get('manage/ferry/trips/{trip}', [FerryManagementController::class, 'getTripData'])->name('manage.ferry.trips.show');
@@ -105,20 +113,15 @@ Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class.':ferry_st
     Route::put('manage/ferry/trips/{trip}', [FerryManagementController::class, 'updateTrip'])->name('manage.ferry.trips.update');
 });
 
-Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class.':theme_staff|admin'])->group(function () {
-    Route::resource('manage/activities', ActivityController::class)->except(['show']);
-    Route::resource('manage/activity-schedules', ActivityScheduleController::class)->except(['show']);
-    Route::get('manage/park/ticket-sales', [ThemeParkTicketController::class, 'reports'])->name('manage.park.reports');
-    Route::patch('manage/park/tickets/{themeParkTicket}/status', [ThemeParkTicketController::class, 'updateStatus'])->name('manage.park.tickets.status');
-    Route::get('manage/park/validate', [TicketValidationController::class, 'parkForm'])->name('manage.park.validate.form');
-    Route::post('manage/park/validate', [TicketValidationController::class, 'parkCheck'])->name('manage.park.validate.check');
-});
 
 Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class.':admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
     Route::get('/admin/ads', [AdminController::class, 'ads'])->name('admin.ads');
     Route::post('/admin/ads', [AdminController::class, 'storeAd'])->name('admin.ads.store');
+    Route::put('/admin/ads/{id}', [AdminController::class, 'updateAd'])->name('admin.ads.update');
+    Route::patch('/admin/ads/{id}/deactivate', [AdminController::class, 'deactivateAd'])->name('admin.ads.deactivate');
+    Route::delete('/admin/ads/{id}', [AdminController::class, 'deleteAd'])->name('admin.ads.delete');
     Route::get('/admin/map', [AdminController::class, 'map'])->name('admin.map');
     Route::post('/admin/map', [AdminController::class, 'storeLocation'])->name('admin.map.store');
     
@@ -144,8 +147,11 @@ Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class.':admin'])
     Route::get('/admin/ferry/dashboard', [FerryManagementController::class, 'dashboard'])->name('admin.ferry.dashboard');
     Route::get('/admin/ferry/schedule', [FerryManagementController::class, 'schedule'])->name('admin.ferry.schedule');
     Route::get('/admin/ferry/passengers/{trip?}', [FerryManagementController::class, 'passengerLists'])->name('admin.ferry.passengers');
+    Route::post('/admin/ferry/pass/issue', [FerryManagementController::class, 'issueFerryPass'])->name('admin.ferry.issue-pass');
     Route::post('/admin/ferry/pass/{booking}', [FerryManagementController::class, 'issueFerryPass'])->name('admin.ferry.pass.issue');
     Route::get('/admin/ferry/reports', [FerryManagementController::class, 'tripReports'])->name('admin.ferry.reports');
+    Route::get('/admin/ferry/export-trips', [FerryManagementController::class, 'exportTrips'])->name('admin.ferry.export.trips');
+    Route::get('/admin/ferry/export-revenue', [FerryManagementController::class, 'exportRevenue'])->name('admin.ferry.export.revenue');
     Route::patch('/admin/ferry/trips/{trip}/status', [FerryManagementController::class, 'updateTripStatus'])->name('admin.ferry.trips.status');
     Route::get('/admin/ferry/trips/{trip}', [FerryManagementController::class, 'getTripData'])->name('admin.ferry.trips.show');
     Route::post('/admin/ferry/trips', [FerryManagementController::class, 'storeTrip'])->name('admin.ferry.trips.store');

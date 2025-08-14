@@ -4,11 +4,15 @@
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">Hotel Reports</h1>
     <div class="flex gap-3">
-      <a href="{{ route('admin.hotels.dashboard') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-        Dashboard
+      <a href="{{ route('admin.hotels.dashboard') }}" class="group relative bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <span class="text-lg">🏨</span>
+        <span>Dashboard</span>
+        <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </a>
-      <button onclick="generateReport()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-        Generate Report
+      <button onclick="generateReport()" class="group relative bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <span class="text-lg">📊</span>
+        <span>Generate Report</span>
+        <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </button>
     </div>
   </div>
@@ -49,8 +53,10 @@
       </select>
     </div>
 
-    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-      Apply Filters
+    <button type="submit" class="group relative bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+      <span class="text-lg">🔍</span>
+      <span>Apply Filters</span>
+      <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
     </button>
   </form>
 </div>

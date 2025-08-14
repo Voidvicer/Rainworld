@@ -4,7 +4,7 @@
   <div class="flex items-center gap-3 mb-4">
     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-teal-500 grid place-content-center text-white text-lg shadow">🏨</div>
     <div>
-      <h1 class="text-2xl font-semibold tracking-tight text-slate-800 dark:text-slate-100">Island Hotels</h1>
+      <h1 class="text-2xl font-semibold tracking-tight text-slate-800 dark:text-slate-100">Rainworld Hotels</h1>
       <p class="text-sm text-slate-600 dark:text-slate-400">Discover luxury accommodations across our tropical paradise</p>
     </div>
   </div>

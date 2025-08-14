@@ -28,7 +28,7 @@
 <div id="errorMessage" class="hidden bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
   <div class="flex items-center gap-2 text-red-700 dark:text-red-400 text-sm">
     <span class="w-5 h-5 rounded bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400 grid place-content-center text-xs">⚠️</span>
-    <span>You need to select at least 1 departure and at least 1 return on the schedule.</span>
+    <span>You need to select at least one trip to proceed with booking.</span>
   </div>
 </div>
 
@@ -44,9 +44,10 @@
       </div>
     </form>
     <div class="flex gap-3">
-      <a href="{{ route('ferry.tickets.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] border border-blue-500">
-        <span class="w-4 h-4 rounded bg-white/20 grid place-content-center text-xs">🎫</span>
-        My Ferry Tickets
+            <a href="{{ route('ferry.tickets.index') }}" class="group relative bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 inline-flex items-center gap-2">
+        <span class="text-lg">🎫</span>
+        <span>My Tickets</span>
+        <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </a>
       <button id="bookNowBtn" onclick="processBooking()" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-sm font-medium shadow-md transition-all transform hover:scale-[1.02] active:scale-[0.98]">
         <span class="w-4 h-4 rounded bg-white/20 grid place-content-center text-xs">⛴️</span>
@@ -193,8 +194,8 @@ function processBooking() {
   const departureTrips = document.querySelectorAll('.departure-trip:checked');
   const returnTrips = document.querySelectorAll('.return-trip:checked');
   
-  if (departureTrips.length === 0 || returnTrips.length === 0) {
-    showError('You need to select at least 1 departure and at least 1 return on the schedule.');
+  if (departureTrips.length === 0 && returnTrips.length === 0) {
+    showError('You need to select at least one trip to proceed with booking.');
     return;
   }
   

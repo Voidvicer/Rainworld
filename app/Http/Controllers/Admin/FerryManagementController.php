@@ -14,28 +14,28 @@ class FerryManagementController extends Controller
     public function dashboard()
     {
         $stats = [
-            'today_trips' => FerryTrip::whereDate('departure_date', today())->count(),
-            'active_trips' => FerryTrip::whereDate('departure_date', today())
+            'today_trips' => FerryTrip::whereDate('date', today())->count(),
+            'active_trips' => FerryTrip::whereDate('date', today())
                 ->whereIn('status', ['scheduled', 'boarding', 'departed'])
                 ->count(),
             'today_passengers' => FerryTicket::whereHas('trip', function($q) {
-                $q->whereDate('departure_date', today());
+                $q->whereDate('date', today());
             })->where('status', 'paid')->sum('quantity'),
             'capacity_utilization' => $this->getTodayCapacityUtilization(),
             'today_revenue' => FerryTicket::whereHas('trip', function($q) {
-                $q->whereDate('departure_date', today());
+                $q->whereDate('date', today());
             })->where('status', 'paid')->sum('total_amount'),
             'revenue_change' => 5.2, // Mock data
             'alerts_count' => 0, // Mock data
         ];
         
-        $todayTrips = FerryTrip::whereDate('departure_date', today())
+        $todayTrips = FerryTrip::whereDate('date', today())
             ->with(['tickets'])
             ->get()
             ->map(function($trip) {
                 $bookedPassengers = $trip->tickets->where('status', 'paid')->sum('quantity');
-                $utilizationPercentage = $trip->passenger_capacity > 0 
-                    ? round(($bookedPassengers / $trip->passenger_capacity) * 100, 1) 
+                $utilizationPercentage = $trip->capacity > 0 
+                    ? round(($bookedPassengers / $trip->capacity) * 100, 1) 
                     : 0;
                 
                 $trip->booked_passengers = $bookedPassengers;
@@ -63,7 +63,8 @@ class FerryManagementController extends Controller
         $passengerChartData = $this->getPassengerChartData();
         $recentAlerts = collect(); // Mock empty alerts
         
-        return view('admin.ferry.dashboard', compact('stats', 'todayTrips', 'routePerformance', 'passengerChartData', 'recentAlerts'));
+        // All users use the management interface
+        return view('manage.ferry.dashboard', compact('stats', 'todayTrips', 'routePerformance', 'passengerChartData', 'recentAlerts'));
     }
 
     public function schedule(Request $request)
@@ -72,21 +73,21 @@ class FerryManagementController extends Controller
         
         // Apply filters
         if ($request->filled('start_date')) {
-            $query->whereDate('departure_date', '>=', $request->start_date);
+            $query->whereDate('date', '>=', $request->start_date);
         } else {
-            $query->whereDate('departure_date', '>=', today());
+            $query->whereDate('date', '>=', today());
         }
         
         if ($request->filled('end_date')) {
-            $query->whereDate('departure_date', '<=', $request->end_date);
+            $query->whereDate('date', '<=', $request->end_date);
         } else {
-            $query->whereDate('departure_date', '<=', today()->addDays(30));
+            $query->whereDate('date', '<=', today()->addDays(30));
         }
         
         if ($request->filled('route')) {
             $query->where(function($q) use ($request) {
-                $q->where('departure_location', 'like', '%' . $request->route . '%')
-                  ->orWhere('arrival_location', 'like', '%' . $request->route . '%');
+                $q->where('origin', 'like', '%' . $request->route . '%')
+                  ->orWhere('destination', 'like', '%' . $request->route . '%');
             });
         }
         
@@ -95,8 +96,8 @@ class FerryManagementController extends Controller
         }
         
         $trips = $query->with(['tickets'])
-            ->orderBy('departure_date')
-            ->orderBy('departure_time')
+            ->orderBy('date')
+            ->orderBy('depart_time')
             ->paginate(20);
         
         // Add booked passengers count to each trip
@@ -105,16 +106,17 @@ class FerryManagementController extends Controller
             return $trip;
         });
         
-        $routes = FerryTrip::select('departure_location', 'arrival_location')
+        $routes = FerryTrip::select('origin', 'destination')
             ->distinct()
             ->get()
             ->map(function($trip) {
-                return $trip->departure_location . ' → ' . $trip->arrival_location;
+                return $trip->origin . ' → ' . $trip->destination;
             })
             ->unique()
             ->values();
         
-        return view('admin.ferry.schedule', compact('trips', 'routes'));
+        // All users use the management interface
+        return view('manage.ferry.schedule', compact('trips', 'routes'));
     }
 
     public function updateTripStatus(Request $request, FerryTrip $trip)
@@ -136,19 +138,21 @@ class FerryManagementController extends Controller
     public function storeTrip(Request $request)
     {
         $request->validate([
-            'departure_location' => 'required|string|max:255',
-            'arrival_location' => 'required|string|max:255',
-            'departure_date' => 'required|date',
-            'departure_time' => 'required',
+            'origin' => 'required|string|max:255',
+            'destination' => 'required|string|max:255',
+            'date' => 'required|date',
+            'depart_time' => 'required',
             'duration_hours' => 'required|numeric|min:0.5',
-            'passenger_capacity' => 'required|integer|min:1',
-            'price_per_person' => 'required|numeric|min:0',
+            'capacity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
             'status' => 'required|in:scheduled,boarding,departed,arrived,canceled'
         ]);
         
         $data = $request->all();
-        $data['arrival_time'] = date('H:i:s', strtotime($data['departure_time'] . ' + ' . $data['duration_hours'] . ' hours'));
-        $data['date'] = $data['departure_date']; // For backward compatibility
+        // Calculate arrival time if needed
+        if (isset($data['duration_hours'])) {
+            $data['arrival_time'] = date('H:i:s', strtotime($data['depart_time'] . ' + ' . $data['duration_hours'] . ' hours'));
+        }
         
         FerryTrip::create($data);
         
@@ -158,19 +162,21 @@ class FerryManagementController extends Controller
     public function updateTrip(Request $request, FerryTrip $trip)
     {
         $request->validate([
-            'departure_location' => 'required|string|max:255',
-            'arrival_location' => 'required|string|max:255', 
-            'departure_date' => 'required|date',
-            'departure_time' => 'required',
+            'origin' => 'required|string|max:255',
+            'destination' => 'required|string|max:255', 
+            'date' => 'required|date',
+            'depart_time' => 'required',
             'duration_hours' => 'required|numeric|min:0.5',
-            'passenger_capacity' => 'required|integer|min:1',
-            'price_per_person' => 'required|numeric|min:0',
+            'capacity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
             'status' => 'required|in:scheduled,boarding,departed,arrived,canceled'
         ]);
         
         $data = $request->all();
-        $data['arrival_time'] = date('H:i:s', strtotime($data['departure_time'] . ' + ' . $data['duration_hours'] . ' hours'));
-        $data['date'] = $data['departure_date']; // For backward compatibility
+        // Calculate arrival time if needed
+        if (isset($data['duration_hours'])) {
+            $data['arrival_time'] = date('H:i:s', strtotime($data['depart_time'] . ' + ' . $data['duration_hours'] . ' hours'));
+        }
         
         $trip->update($data);
         
@@ -179,13 +185,13 @@ class FerryManagementController extends Controller
     
     private function getTodayCapacityUtilization()
     {
-        $todayTrips = FerryTrip::whereDate('departure_date', today())->get();
+        $todayTrips = FerryTrip::whereDate('date', today())->get();
         
         if ($todayTrips->isEmpty()) {
             return 0;
         }
         
-        $totalCapacity = $todayTrips->sum('passenger_capacity');
+        $totalCapacity = $todayTrips->sum('capacity');
         $totalBooked = $todayTrips->sum(function($trip) {
             return $trip->tickets->where('status', 'paid')->sum('quantity');
         });
@@ -199,7 +205,7 @@ class FerryManagementController extends Controller
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
             $passengers = FerryTicket::whereHas('trip', function($q) use ($date) {
-                $q->whereDate('departure_date', $date);
+                $q->whereDate('date', $date);
             })->where('status', 'paid')->sum('quantity');
             
             $data[] = [
@@ -222,14 +228,34 @@ class FerryManagementController extends Controller
         ->orderBy('depart_time')
         ->get();
         
-        return view('admin.ferry.passengers', compact('trips', 'selectedDate'));
+        // Preload booking data to avoid N+1 queries
+        $userIds = $trips->flatMap(function($trip) {
+            return $trip->tickets->pluck('user_id');
+        })->unique();
+        
+        $validBookings = \App\Models\Booking::whereIn('user_id', $userIds)
+            ->where('status', '!=', 'canceled')
+            ->whereDate('check_in', '<=', $selectedDate)
+            ->whereDate('check_out', '>=', $selectedDate)
+            ->pluck('user_id')
+            ->toArray();
+        
+        // Add booking status to each trip's tickets
+        $trips->each(function($trip) use ($validBookings) {
+            $trip->tickets->each(function($ticket) use ($validBookings) {
+                $ticket->hasValidBooking = in_array($ticket->user_id, $validBookings);
+            });
+        });
+        
+        // All users use the management interface
+        return view('manage.ferry.passengers', compact('trips', 'selectedDate'));
     }
     
-    public function issueFerryPass(Request $request)
+    public function issueFerryPass(Request $request, $booking = null)
     {
         $request->validate([
             'ticket_code' => 'required|string',
-            'booking_verification' => 'required|boolean'
+            'booking_verification' => 'sometimes|boolean'
         ]);
         
         $ticket = FerryTicket::with('trip', 'user')->where('code', $request->ticket_code)->first();
@@ -245,7 +271,7 @@ class FerryManagementController extends Controller
             ->whereDate('check_out', '>=', $ticket->trip->date)
             ->exists();
         
-        if (!$hasValidBooking && $request->booking_verification) {
+        if (!$hasValidBooking && $request->has('booking_verification') && $request->booking_verification) {
             return back()->withErrors(['booking_verification' => 'No valid hotel booking found for this passenger.']);
         }
         
@@ -261,7 +287,7 @@ class FerryManagementController extends Controller
             'valid_booking' => $hasValidBooking
         ];
         
-        return view('admin.ferry.pass', compact('passData'));
+        return back()->with('passData', $passData);
     }
     
     public function tripReports(Request $request)
@@ -288,7 +314,8 @@ class FerryManagementController extends Controller
             'average_occupancy' => $this->calculateAverageOccupancy($dateFrom, $dateTo)
         ];
         
-        return view('admin.ferry.reports', compact('trips', 'stats', 'dateFrom', 'dateTo'));
+        // All users use the management interface
+        return view('manage.ferry.reports', compact('trips', 'stats', 'dateFrom', 'dateTo'));
     }
     
     public function validateTicketAdvanced(Request $request)
@@ -332,5 +359,262 @@ class FerryManagementController extends Controller
         });
         
         return round($totalOccupancy / $trips->count(), 1);
+    }
+
+    public function reports(Request $request)
+    {
+        $dateFrom = $request->get('dateFrom', now()->subDays(30)->format('Y-m-d'));
+        $dateTo = $request->get('dateTo', now()->format('Y-m-d'));
+        $routeFilter = $request->get('route');
+
+        $query = FerryTrip::with(['tickets' => function($q) {
+            $q->where('status', 'paid');
+        }])
+        ->whereBetween('date', [$dateFrom, $dateTo]);
+
+        if ($routeFilter) {
+            $routeParts = explode(' → ', $routeFilter);
+            if (count($routeParts) === 2) {
+                $query->where('origin', $routeParts[0])
+                      ->where('destination', $routeParts[1]);
+            }
+        }
+
+        $trips = $query->orderBy('date', 'desc')
+                      ->orderBy('depart_time', 'desc')
+                      ->paginate(20);
+
+        // Calculate statistics
+        $allTripsQuery = FerryTrip::with(['tickets' => function($q) {
+            $q->where('status', 'paid');
+        }])
+        ->whereBetween('date', [$dateFrom, $dateTo]);
+
+        if ($routeFilter) {
+            $routeParts = explode(' → ', $routeFilter);
+            if (count($routeParts) === 2) {
+                $allTripsQuery->where('origin', $routeParts[0])
+                             ->where('destination', $routeParts[1]);
+            }
+        }
+
+        $allTrips = $allTripsQuery->get();
+        
+        $totalTrips = $allTrips->count();
+        $totalPassengers = $allTrips->sum(function($trip) {
+            return $trip->tickets->sum('quantity');
+        });
+        $totalTickets = $allTrips->sum(function($trip) {
+            return $trip->tickets->count();
+        });
+        $totalRevenue = $allTrips->sum(function($trip) {
+            return $trip->tickets->sum('total_amount');
+        });
+        
+        $totalCapacity = $allTrips->sum('capacity');
+        $avgOccupancy = $totalCapacity > 0 ? round(($totalPassengers / $totalCapacity) * 100, 1) : 0;
+
+        // Prepare chart data
+        $chartData = $this->prepareChartData($allTrips, $dateFrom, $dateTo);
+
+        $stats = [
+            'total_trips' => $totalTrips,
+            'total_passengers' => $totalPassengers,
+            'total_tickets' => $totalTickets,
+            'total_revenue' => $totalRevenue,
+            'avg_occupancy' => $avgOccupancy,
+            'peak_time' => 'Morning' // Can be enhanced with actual calculation
+        ];
+
+        return view('manage.ferry.reports', compact(
+            'trips', 
+            'stats', 
+            'dateFrom', 
+            'dateTo',
+            'chartData'
+        ));
+    }
+
+    private function prepareChartData($trips, $dateFrom, $dateTo)
+    {
+        $chartData = [
+            'dates' => [],
+            'occupancy' => [],
+            'revenue' => [],
+            'routes' => [],
+            'routeRevenue' => []
+        ];
+
+        // Group trips by date for daily charts
+        $tripsByDate = $trips->groupBy(function($trip) {
+            return $trip->date;
+        });
+
+        // Generate date range
+        $start = \Carbon\Carbon::parse($dateFrom);
+        $end = \Carbon\Carbon::parse($dateTo);
+        
+        while ($start <= $end) {
+            $dateStr = $start->format('Y-m-d');
+            $chartData['dates'][] = $start->format('M j');
+            
+            $dayTrips = $tripsByDate->get($dateStr, collect());
+            
+            // Calculate occupancy
+            $totalCapacity = $dayTrips->sum('capacity');
+            $totalPassengers = $dayTrips->sum(function($trip) {
+                return $trip->tickets->sum('quantity');
+            });
+            $occupancy = $totalCapacity > 0 ? round(($totalPassengers / $totalCapacity) * 100, 1) : 0;
+            $chartData['occupancy'][] = $occupancy;
+            
+            // Calculate revenue
+            $dailyRevenue = $dayTrips->sum(function($trip) {
+                return $trip->tickets->sum('total_amount');
+            });
+            $chartData['revenue'][] = round($dailyRevenue, 2);
+            
+            $start->addDay();
+        }
+
+        // Route performance data
+        $routeRevenue = $trips->groupBy(function($trip) {
+            return $trip->origin . ' → ' . $trip->destination;
+        })->map(function($routeTrips) {
+            return $routeTrips->sum(function($trip) {
+                return $trip->tickets->sum('total_amount');
+            });
+        });
+
+        $chartData['routes'] = $routeRevenue->keys()->toArray();
+        $chartData['routeRevenue'] = $routeRevenue->values()->toArray();
+
+        return $chartData;
+    }
+
+    public function exportTrips(Request $request)
+    {
+        $dateFrom = $request->get('dateFrom', now()->subMonth()->toDateString());
+        $dateTo = $request->get('dateTo', now()->toDateString());
+        $route = $request->get('route');
+
+        $query = FerryTrip::with(['tickets.user'])
+            ->whereBetween('date', [$dateFrom, $dateTo]);
+
+        if ($route) {
+            $query->where(function($q) use ($route) {
+                $routeParts = explode(' → ', $route);
+                if (count($routeParts) == 2) {
+                    $q->where('origin', $routeParts[0])->where('destination', $routeParts[1]);
+                }
+            });
+        }
+
+        $trips = $query->orderBy('date')->orderBy('depart_time')->get();
+
+        $csvData = [];
+        $csvData[] = ['Date', 'Route', 'Departure', 'Capacity', 'Booked', 'Occupancy %', 'Revenue'];
+
+        foreach ($trips as $trip) {
+            $bookedSeats = $trip->tickets->where('status', 'paid')->sum('quantity');
+            $revenue = $trip->tickets->where('status', 'paid')->sum('total_amount');
+            $occupancy = $trip->capacity > 0 ? round(($bookedSeats / $trip->capacity) * 100, 1) : 0;
+
+            $csvData[] = [
+                $trip->date,
+                $trip->origin . ' → ' . $trip->destination,
+                $trip->depart_time,
+                $trip->capacity,
+                $bookedSeats,
+                $occupancy . '%',
+                '$' . number_format($revenue, 2)
+            ];
+        }
+
+        $filename = 'ferry_trips_' . $dateFrom . '_to_' . $dateTo . '.csv';
+        
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"'
+        ];
+
+        $callback = function() use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportRevenue(Request $request)
+    {
+        $dateFrom = $request->get('dateFrom', now()->subMonth()->toDateString());
+        $dateTo = $request->get('dateTo', now()->toDateString());
+        $route = $request->get('route');
+
+        $query = FerryTrip::with(['tickets.user'])
+            ->whereBetween('date', [$dateFrom, $dateTo]);
+
+        if ($route) {
+            $query->where(function($q) use ($route) {
+                $routeParts = explode(' → ', $route);
+                if (count($routeParts) == 2) {
+                    $q->where('origin', $routeParts[0])->where('destination', $routeParts[1]);
+                }
+            });
+        }
+
+        $trips = $query->orderBy('date')->orderBy('depart_time')->get();
+
+        $csvData = [];
+        $csvData[] = ['Date', 'Route', 'Departure', 'Tickets Sold', 'Total Passengers', 'Ticket Revenue', 'Avg Price per Passenger'];
+
+        $totalRevenue = 0;
+        $totalPassengers = 0;
+
+        foreach ($trips as $trip) {
+            $paidTickets = $trip->tickets->where('status', 'paid');
+            $ticketCount = $paidTickets->count();
+            $passengerCount = $paidTickets->sum('quantity');
+            $revenue = $paidTickets->sum('total_amount');
+            $avgPrice = $passengerCount > 0 ? $revenue / $passengerCount : 0;
+
+            $totalRevenue += $revenue;
+            $totalPassengers += $passengerCount;
+
+            $csvData[] = [
+                $trip->date,
+                $trip->origin . ' → ' . $trip->destination,
+                $trip->depart_time,
+                $ticketCount,
+                $passengerCount,
+                '$' . number_format($revenue, 2),
+                '$' . number_format($avgPrice, 2)
+            ];
+        }
+
+        // Add summary row
+        $csvData[] = ['', '', '', '', '', '', ''];
+        $csvData[] = ['SUMMARY', '', '', '', $totalPassengers, '$' . number_format($totalRevenue, 2), '$' . number_format($totalPassengers > 0 ? $totalRevenue / $totalPassengers : 0, 2)];
+
+        $filename = 'ferry_revenue_' . $dateFrom . '_to_' . $dateTo . '.csv';
+        
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"'
+        ];
+
+        $callback = function() use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

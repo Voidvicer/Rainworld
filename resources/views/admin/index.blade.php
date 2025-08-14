@@ -4,36 +4,36 @@
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">Admin Dashboard</h1>
     <div class="flex gap-3">
-      <a href="{{ route('admin.users.index') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-        Manage Users
+      <a href="{{ route('admin.users.index') }}" class="group relative bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <span class="text-lg">👥</span>
+        <span>Manage Users</span>
+        <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </a>
-      <a href="{{ route('admin.reports') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-        View Reports
+      <a href="{{ route('admin.reports') }}" class="group relative bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <span class="text-lg">📊</span>
+        <span>View Reports</span>
+        <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </a>
     </div>
   </div>
 </div>
 
 <!-- Main Stats Grid -->
-<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-  <div class="rounded-xl p-5 bg-gradient-to-br from-indigo-600 to-teal-600 text-white shadow">
+<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">
+  <div class="rounded-xl p-5 bg-gradient-to-br from-indigo-600 to-purple-700 text-white shadow-lg">
     <div class="text-xs uppercase tracking-wide opacity-80 mb-1">Total Users</div>
     <div class="text-3xl font-bold">{{ number_format($stats['users']) }}</div>
     <div class="text-xs opacity-70 mt-1">{{ number_format($stats['active_users']) }} active</div>
   </div>
-  <div class="rounded-xl p-5 bg-gradient-to-br from-amber-500 to-pink-500 text-white shadow">
+  <div class="rounded-xl p-5 bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg">
     <div class="text-xs uppercase tracking-wide opacity-80 mb-1">Hotel Bookings</div>
     <div class="text-3xl font-bold">{{ number_format($stats['hotel_bookings']) }}</div>
     <div class="text-xs opacity-70 mt-1">{{ number_format($stats['today_checkins']) }} check-ins today</div>
   </div>
-  <div class="rounded-xl p-5 bg-gradient-to-br from-sky-500 to-indigo-500 text-white shadow">
+  <div class="rounded-xl p-5 bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg">
     <div class="text-xs uppercase tracking-wide opacity-80 mb-1">Ferry Tickets</div>
     <div class="text-3xl font-bold">{{ number_format($stats['ferry_tickets']) }}</div>
     <div class="text-xs opacity-70 mt-1">{{ number_format($stats['today_ferry_passengers']) }} passengers today</div>
-  </div>
-  <div class="rounded-xl p-5 bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow">
-    <div class="text-xs uppercase tracking-wide opacity-80 mb-1">Park Tickets</div>
-    <div class="text-3xl font-bold">{{ number_format($stats['park_tickets']) }}</div>
   </div>
 </div>
 

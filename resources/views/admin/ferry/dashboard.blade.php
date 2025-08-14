@@ -4,11 +4,15 @@
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">Ferry Operations Dashboard</h1>
     <div class="flex gap-3">
-      <a href="{{ route('admin.ferry.passengers') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-        Passenger Lists
+      <a href="{{ route('admin.ferry.passengers') }}" class="group relative bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <span class="text-lg">👥</span>
+        <span>Passenger Lists</span>
+        <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </a>
-      <a href="{{ route('admin.ferry.schedule') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-        Schedule
+      <a href="{{ route('admin.ferry.schedule') }}" class="group relative bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <span class="text-lg">📅</span>
+        <span>Schedule</span>
+        <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </a>
     </div>
   </div>

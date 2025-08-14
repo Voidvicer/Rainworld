@@ -65,8 +65,6 @@
                       Hotel and booking management
                     @elseif($role->name === 'ferry_staff')
                       Ferry operations and ticketing
-                    @elseif($role->name === 'theme_staff')
-                      Theme park management
                     @else
                       Standard user permissions
                     @endif

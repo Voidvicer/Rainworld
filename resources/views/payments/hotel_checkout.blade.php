@@ -50,11 +50,40 @@
           <span class="text-slate-600 dark:text-slate-400">Rate per night:</span>
           <span class="font-medium text-slate-800 dark:text-slate-200">${{ number_format($data['price_per_night'],2) }}</span>
         </div>
+        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
+          <span class="text-slate-600 dark:text-slate-400">Subtotal ({{ $data['nights'] }} {{ $data['nights'] == 1 ? 'night' : 'nights' }}):</span>
+          <span class="font-medium text-slate-800 dark:text-slate-200">${{ number_format($data['base_total'],2) }}</span>
+        </div>
+        
+        @if($data['discount'] > 0 && $data['applied_promotion'])
+        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
+          <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+            Promotion: {{ $data['applied_promotion']->title }} ({{ $data['applied_promotion']->discount_percentage }}% OFF)
+          </span>
+          <span class="font-medium text-emerald-600 dark:text-emerald-400">-${{ number_format($data['discount'],2) }}</span>
+        </div>
+        @endif
+        
         <div class="flex justify-between items-center py-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg px-4">
           <span class="font-semibold text-slate-800 dark:text-slate-200">Total Amount:</span>
           <span class="font-bold text-2xl text-emerald-600 dark:text-emerald-400">${{ number_format($data['total'],2) }}</span>
         </div>
       </div>
+
+      @if($data['discount'] > 0 && $data['applied_promotion'])
+      <div class="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 rounded-lg p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-800/50 text-emerald-600 dark:text-emerald-300 grid place-content-center text-sm">🎉</div>
+          <div>
+            <p class="font-medium text-emerald-800 dark:text-emerald-100">Great! You've got a discount!</p>
+            <p class="text-sm text-emerald-600 dark:text-emerald-200">{{ $data['applied_promotion']->title }} - {{ $data['applied_promotion']->discount_percentage }}% off your booking</p>
+          </div>
+        </div>
+      </div>
+      @endif
 
       <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
         <div class="flex items-center gap-2 text-blue-700 dark:text-blue-400 text-sm">

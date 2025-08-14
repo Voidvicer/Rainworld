@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Room;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 
 class HotelBookingController extends Controller
@@ -34,16 +35,40 @@ class HotelBookingController extends Controller
 
         if ($overlap >= $room->total_rooms) return back()->withErrors(['check_in'=>'No availability for selected dates.'])->withInput();
 
-    $nights = (new \DateTime($data['check_in']))->diff(new \DateTime($data['check_out']))->days;
-    $total = $nights * $room->price_per_night;
+        $nights = (new \DateTime($data['check_in']))->diff(new \DateTime($data['check_out']))->days;
+        $baseTotal = $nights * $room->price_per_night;
+        
+        // Apply active hotel/global promotions
+        $discount = 0;
+        $appliedPromotion = null;
+        $activePromotions = Promotion::where('active', true)
+            ->where(function($query) {
+                $query->where('scope', 'hotel')->orWhere('scope', 'global');
+            })
+            ->whereNotNull('discount_percentage')
+            ->where('discount_percentage', '>', 0)
+            ->orderBy('discount_percentage', 'desc')
+            ->first();
+            
+        if ($activePromotions) {
+            $discount = ($baseTotal * $activePromotions->discount_percentage) / 100;
+            $appliedPromotion = $activePromotions->title;
+        }
+        
+        $total = $baseTotal - $discount;
 
         $booking = Booking::create([
             'user_id'=>$request->user()->id,'room_id'=>$room->id,
             'check_in'=>$data['check_in'],'check_out'=>$data['check_out'],'guests'=>$data['guests'],
             'status'=>'confirmed','payment_status'=>'paid','total_amount'=>$total,
         ]);
+        
+        $successMessage = 'Booking confirmed: '.$booking->confirmation_code;
+        if ($appliedPromotion) {
+            $successMessage .= ' (Applied promotion: '.$appliedPromotion.' - $'.number_format($discount, 2).' discount)';
+        }
 
-        return redirect()->route('bookings.index')->with('success','Booking confirmed: '.$booking->confirmation_code);
+        return redirect()->route('bookings.index')->with('success', $successMessage);
     }
 
     public function prepare(Request $request, Room $room){
@@ -57,11 +82,36 @@ class HotelBookingController extends Controller
         if($nights <= 0){
             return back()->withErrors(['check_in'=>'Invalid date range'])->withInput();
         }
+        
+        $baseTotal = $nights * $room->price_per_night;
+        
+        // Apply active hotel/global promotions for preview
+        $discount = 0;
+        $appliedPromotion = null;
+        $activePromotions = Promotion::where('active', true)
+            ->where(function($query) {
+                $query->where('scope', 'hotel')->orWhere('scope', 'global');
+            })
+            ->whereNotNull('discount_percentage')
+            ->where('discount_percentage', '>', 0)
+            ->orderBy('discount_percentage', 'desc')
+            ->first();
+            
+        if ($activePromotions) {
+            $discount = ($baseTotal * $activePromotions->discount_percentage) / 100;
+            $appliedPromotion = $activePromotions;
+        }
+        
+        $total = $baseTotal - $discount;
+        
         $payload = $data + [
             'room_id'=>$room->id,
             'nights'=>$nights,
             'price_per_night'=>$room->price_per_night,
-            'total'=>$nights * $room->price_per_night
+            'base_total'=>$baseTotal,
+            'discount'=>$discount,
+            'applied_promotion'=>$appliedPromotion,
+            'total'=>$total
         ];
         session(['hotel_booking'=>$payload]);
         return view('payments.hotel_checkout',[ 'room'=>$room,'data'=>$payload ]);

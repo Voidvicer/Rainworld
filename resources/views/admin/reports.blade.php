@@ -16,11 +16,6 @@
     <div class="text-2xl font-bold text-indigo-700">${{ number_format($ferryRevenue,2) }}</div>
     <div class="absolute -right-4 -bottom-4 opacity-10 text-[120px] font-black select-none">F</div>
   </div>
-  <div class="rounded-xl p-5 bg-white/70 backdrop-blur ring-1 ring-slate-200 shadow relative overflow-hidden">
-    <div class="text-xs uppercase tracking-wide text-slate-500 mb-1">Park Revenue</div>
-    <div class="text-2xl font-bold text-indigo-700">${{ number_format($parkRevenue,2) }}</div>
-    <div class="absolute -right-4 -bottom-4 opacity-10 text-[120px] font-black select-none">P</div>
-  </div>
 </div>
 
 <!-- Enhanced Analytics Grid -->
@@ -101,7 +96,6 @@
   const labels = @json($chartLabels);
   const hotelData = @json($hotelSeries);
   const ferryData = @json($ferrySeries);
-  const parkData = @json($parkSeries);
   const userGrowthData = @json($userGrowth);
 
   // Daily Revenue Chart
@@ -113,7 +107,6 @@
       datasets: [
         {label:'Hotel', data:hotelData, borderColor:'#6366f1', backgroundColor:'rgba(99,102,241,.15)', tension:.35, fill:true},
         {label:'Ferry', data:ferryData, borderColor:'#0ea5e9', backgroundColor:'rgba(14,165,233,.15)', tension:.35, fill:true},
-        {label:'Park', data:parkData, borderColor:'#10b981', backgroundColor:'rgba(16,185,129,.15)', tension:.35, fill:true},
       ]
     },
     options:{
@@ -133,10 +126,10 @@
   new Chart(ctxPie, {
     type: 'doughnut',
     data: {
-      labels:['Hotel','Ferry','Park'],
+      labels:['Hotel','Ferry'],
       datasets:[{
-        data:[hotelData.reduce((a,b)=>a+b,0), ferryData.reduce((a,b)=>a+b,0), parkData.reduce((a,b)=>a+b,0)],
-        backgroundColor:['#6366f1','#0ea5e9','#10b981'],
+        data:[hotelData.reduce((a,b)=>a+b,0), ferryData.reduce((a,b)=>a+b,0)],
+        backgroundColor:['#6366f1','#0ea5e9'],
         borderWidth:0,
         hoverOffset:6
       }]

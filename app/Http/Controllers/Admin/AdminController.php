@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Booking;
 use App\Models\FerryTicket;
-use App\Models\ThemeParkTicket;
+
 use App\Models\Promotion;
 use App\Models\Location;
 use App\Models\Hotel;
@@ -25,7 +25,6 @@ class AdminController extends Controller
             'hotel_bookings' => Booking::count(),
             'total_ferry_tickets' => FerryTicket::count(),
             'ferry_tickets' => FerryTicket::count(),
-            'park_tickets' => ThemeParkTicket::count(),
             'total_revenue' => $this->getTotalRevenue(),
             'today_checkins' => Booking::whereDate('check_in', today())->where('status', 'confirmed')->count(),
             'today_ferry_passengers' => FerryTicket::whereHas('trip', function($q) {
@@ -42,7 +41,6 @@ class AdminController extends Controller
     public function reports(){
         $hotelRevenue = Booking::where('payment_status','paid')->sum('total_amount');
         $ferryRevenue = FerryTicket::where('status','paid')->sum('total_amount');
-        $parkRevenue = ThemeParkTicket::where('status','paid')->sum('total_amount');
         
         // Enhanced analytics with more detailed breakdowns
         $monthlyStats = $this->getMonthlyBreakdown();
@@ -56,17 +54,13 @@ class AdminController extends Controller
             ->whereDate('created_at',$d->toDateString())->sum('total_amount'));
         $ferrySeries = $days->map(fn($d)=> FerryTicket::where('status','paid')
             ->whereDate('created_at',$d->toDateString())->sum('total_amount'));
-        $parkSeries = $days->map(fn($d)=> ThemeParkTicket::where('status','paid')
-            ->whereDate('created_at',$d->toDateString())->sum('total_amount'));
             
         return view('admin.reports', [
             'hotelRevenue'=>$hotelRevenue,
             'ferryRevenue'=>$ferryRevenue,
-            'parkRevenue'=>$parkRevenue,
             'chartLabels'=>$labels,
             'hotelSeries'=>$hotelSeries,
             'ferrySeries'=>$ferrySeries,
-            'parkSeries'=>$parkSeries,
             'monthlyStats'=>$monthlyStats,
             'userGrowth'=>$userGrowth,
             'occupancyRates'=>$occupancyRates,
@@ -77,9 +71,8 @@ class AdminController extends Controller
     {
         $hotel = Booking::where('payment_status', 'paid')->sum('total_amount');
         $ferry = FerryTicket::where('status', 'paid')->sum('total_amount');
-        $park = ThemeParkTicket::where('status', 'paid')->sum('total_amount');
         
-        return $hotel + $ferry + $park;
+        return $hotel + $ferry;
     }
     
     private function getRecentActivity()
@@ -183,8 +176,24 @@ class AdminController extends Controller
         return $last7Days;
     }
 
-    public function ads(){ $promos = Promotion::latest()->paginate(20); return view('admin.ads', compact('promos')); }
+    public function ads(){ 
+        $promos = Promotion::latest()->paginate(20); 
+        return view('admin.ads', compact('promos')); 
+    }
+    
     public function storeAd(){
+        // Check if user can create promotions (only hotel managers and admins)
+        if (!auth()->user()->hasRole(['admin', 'hotel_manager'])) {
+            return back()->with('error', 'You do not have permission to create promotions.');
+        }
+        
+        // Check active promotion limit (max 2 active promotions)
+        $activePromotions = Promotion::where('active', true)->count();
+        
+        if ($activePromotions >= 2 && request()->boolean('active')) {
+            return back()->with('error', 'Maximum of 2 active promotions allowed. Please deactivate an existing promotion first.');
+        }
+        
         request()->validate([
             'title'=>'required',
             'content'=>'nullable',
@@ -193,12 +202,69 @@ class AdminController extends Controller
             'ends_at'=>'nullable|date',
             'active'=>'boolean',
             'image_url'=>'nullable',
-            'scope'=>'required|in:global,hotel,ferry,park'
+            'scope'=>'required|in:global,hotel,ferry'
         ]);
         $data = request()->only(['title','content','discount_percentage','starts_at','ends_at','image_url','scope']);
         $data['active'] = request()->boolean('active');
         Promotion::create($data);
         return back()->with('success','Promotion created.');
+    }
+    
+    public function updateAd($id){
+        if (!auth()->user()->hasRole(['admin', 'hotel_manager'])) {
+            return back()->with('error', 'You do not have permission to modify promotions.');
+        }
+        
+        $promotion = Promotion::findOrFail($id);
+        
+        // Check active promotion limit if activating
+        if (!$promotion->active && request()->boolean('active')) {
+            $activePromotions = Promotion::where('active', true)
+                ->where('id', '!=', $id)->count();
+                
+            if ($activePromotions >= 2) {
+                return back()->with('error', 'Maximum of 2 active promotions allowed. Please deactivate an existing promotion first.');
+            }
+        }
+        
+        request()->validate([
+            'title'=>'required',
+            'content'=>'nullable',
+            'discount_percentage'=>'nullable|numeric|min:0|max:100',
+            'starts_at'=>'nullable|date',
+            'ends_at'=>'nullable|date',
+            'active'=>'boolean',
+            'image_url'=>'nullable',
+            'scope'=>'required|in:global,hotel,ferry'
+        ]);
+        
+        $data = request()->only(['title','content','discount_percentage','starts_at','ends_at','image_url','scope']);
+        $data['active'] = request()->boolean('active');
+        $promotion->update($data);
+        return back()->with('success','Promotion updated.');
+    }
+    
+    public function deactivateAd($id){
+        if (!auth()->user()->hasRole(['admin', 'hotel_manager'])) {
+            return back()->with('error', 'You do not have permission to modify promotions.');
+        }
+        
+        $promotion = Promotion::findOrFail($id);
+        $newStatus = !$promotion->active;
+        $promotion->update(['active' => $newStatus]);
+        
+        $message = $newStatus ? 'Promotion activated successfully.' : 'Promotion deactivated successfully.';
+        return back()->with('success', $message);
+    }
+    
+    public function deleteAd($id){
+        if (!auth()->user()->hasRole(['admin', 'hotel_manager'])) {
+            return back()->with('error', 'You do not have permission to delete promotions.');
+        }
+        
+        $promotion = Promotion::findOrFail($id);
+        $promotion->delete();
+        return back()->with('success','Promotion deleted.');
     }
 
     public function map(){ $locations = Location::latest()->paginate(20); return view('admin.map', compact('locations')); }

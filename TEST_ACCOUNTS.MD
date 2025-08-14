@@ -28,14 +28,7 @@ This file contains all the test accounts created by the database seeder for deve
 - **Role:** `ferry_staff`
 - **Access:** Ferry Operations page, trip management
 
-### 4. Theme Park Staff Account
-- **Email:** `theme@picnic.test`
-- **Password:** `password`
-- **Name:** Theme Park Staff
-- **Role:** `theme_staff`
-- **Access:** Park Operations page, ticket management
-
-### 5. Visitor Account
+### 4. Visitor Account
 - **Email:** `visitor@picnic.test`
 - **Password:** `password`
 - **Name:** Demo Visitor
@@ -46,7 +39,7 @@ This file contains all the test accounts created by the database seeder for deve
 
 ### Admin (`admin`)
 - Access to all management interfaces
-- Can access: Hotel Mgmt, Ferry Ops, Park Ops, Admin panel
+- Can access: Hotel Mgmt, Ferry Ops, Admin panel
 
 ### Hotel Manager (`hotel_manager`)
 - Hotel and room management
@@ -57,11 +50,6 @@ This file contains all the test accounts created by the database seeder for deve
 - Ferry trip management
 - Schedule management
 - Can access: Ferry Ops
-
-### Theme Park Staff (`theme_staff`)
-- Theme park operations
-- Ticket management
-- Can access: Park Ops
 
 ### Visitor (`visitor`)
 - Standard user permissions

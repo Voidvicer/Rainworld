@@ -11,7 +11,7 @@ class RolesAndAdminSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (['visitor','hotel_manager','ferry_staff','theme_staff','admin'] as $r) {
+        foreach (['visitor','hotel_manager','ferry_staff','admin'] as $r) {
             Role::findOrCreate($r);
         }
 
@@ -20,13 +20,31 @@ class RolesAndAdminSeeder extends Seeder
             'admin@picnic.test' => ['Admin','admin'],
             'manager@picnic.test' => ['Hotel Manager','hotel_manager'],
             'ferry@picnic.test' => ['Ferry Staff','ferry_staff'],
-            'theme@picnic.test' => ['Theme Park Staff','theme_staff'],
             'visitor@picnic.test' => ['Demo Visitor','visitor'],
         ];
         foreach ($demoUsers as $email => [$name,$role]) {
-            if (!User::where('email',$email)->exists()) {
-                $u = User::create(['name'=>$name,'email'=>$email,'password'=>Hash::make('password')]);
-                $u->assignRole($role);
+            $user = User::where('email',$email)->first();
+            if (!$user) {
+                $user = User::create([
+                    'name'=>$name,
+                    'email'=>$email,
+                    'password'=>Hash::make('password'),
+                    'active'=>true,
+                    'email_verified_at'=>now()
+                ]);
+            } else {
+                // Update existing user to ensure correct settings
+                $user->update([
+                    'name'=>$name,
+                    'password'=>Hash::make('password'),
+                    'active'=>true,
+                    'email_verified_at'=>now()
+                ]);
+            }
+            
+            // Ensure role is assigned
+            if (!$user->hasRole($role)) {
+                $user->assignRole($role);
             }
         }
     }

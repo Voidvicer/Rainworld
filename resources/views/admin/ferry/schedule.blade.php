@@ -4,11 +4,15 @@
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">Ferry Schedule Management</h1>
     <div class="flex gap-3">
-      <a href="{{ route('admin.ferry.dashboard') }}" class="bg-slate-600 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-        Dashboard
+      <a href="{{ route('admin.ferry.dashboard') }}" class="group relative bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <span class="text-lg">📊</span>
+        <span>Dashboard</span>
+        <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </a>
-      <button onclick="openAddTripModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-        Add New Trip
+      <button onclick="openAddTripModal()" class="group relative bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <span class="text-lg">➕</span>
+        <span>Add New Trip</span>
+        <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </button>
     </div>
   </div>
@@ -47,12 +51,15 @@
       </select>
     </div>
 
-    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-      Apply Filters
+    <button type="submit" class="group relative bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+      <span class="text-lg">🔍</span>
+      <span>Apply Filters</span>
+      <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
     </button>
     
-    <a href="{{ route('admin.ferry.schedule') }}" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-      Clear
+    <a href="{{ route('admin.ferry.schedule') }}" class="group relative bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700">
+      <span class="text-lg">🔄</span>
+      <span>Clear</span>
     </a>
   </form>
 </div>
@@ -244,11 +251,14 @@
       </div>
 
       <div class="flex justify-end gap-3 mt-6">
-        <button type="button" onclick="closeTripModal()" class="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">
-          Cancel
+        <button type="button" onclick="closeTripModal()" class="group relative bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700">
+          <span class="text-lg">❌</span>
+          <span>Cancel</span>
         </button>
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-          Save Trip
+        <button type="submit" class="group relative bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+          <span class="text-lg">💾</span>
+          <span>Save Trip</span>
+          <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </button>
       </div>
     </form>

@@ -26,7 +26,7 @@
           <th class="px-6 py-3 text-center font-semibold">Qty</th>
           <th class="px-6 py-3 text-center font-semibold">Status</th>
           <th class="px-6 py-3 text-right font-semibold">Total</th>
-          <th class="px-6 py-3 text-center font-semibold">QR Code</th>
+          <th class="px-6 py-3 text-center font-semibold">Ferry Pass</th>
           <th class="px-6 py-3 text-center font-semibold">Actions</th>
         </tr>
       </thead>
@@ -49,26 +49,28 @@
             <td class="px-6 py-4 text-center text-slate-700 dark:text-slate-300 font-semibold">{{ $t->quantity }}</td>
             <td class="px-6 py-4 text-center">
               <span class="px-3 py-1 rounded-full text-xs font-semibold 
-                @if($t->status==='confirmed') bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-200 dark:ring-emerald-800
-                @elseif($t->status==='canceled') bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-400 ring-1 ring-rose-200 dark:ring-rose-800
-                @elseif($t->status==='completed') bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 ring-1 ring-indigo-200 dark:ring-indigo-800
-                @elseif($t->status==='expired') bg-gray-100 dark:bg-gray-900/50 text-gray-700 dark:text-gray-400 ring-1 ring-gray-200 dark:ring-gray-800
+                @if($t->display_status==='confirmed') bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-200 dark:ring-emerald-800
+                @elseif($t->display_status==='canceled') bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-400 ring-1 ring-rose-200 dark:ring-rose-800
+                @elseif($t->display_status==='completed') bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 ring-1 ring-indigo-200 dark:ring-indigo-800
+                @elseif($t->display_status==='expired') bg-gray-100 dark:bg-gray-900/50 text-gray-700 dark:text-gray-400 ring-1 ring-gray-200 dark:ring-gray-800
                 @else bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400 ring-1 ring-amber-200 dark:ring-amber-800 @endif">
-                {{ ucfirst($t->status) }}
+                {{ ucfirst($t->display_status) }}
               </span>
             </td>
             <td class="px-6 py-4 text-right font-bold text-lg text-slate-800 dark:text-slate-200">${{ number_format($t->total_amount,2) }}</td>
             <td class="px-6 py-4 text-center">
-              @if($t->qr_path)
-                <div class="inline-flex p-2 bg-white dark:bg-slate-900 rounded-lg shadow-sm ring-1 ring-slate-200 dark:ring-slate-700">
-                  <img src="{{ asset('storage/' . $t->qr_path) }}" alt="QR Code" class="w-16 h-16 object-contain">
-                </div>
+              @if($t->pass_issued_at)
+                <a href="{{ route('manage.ferry.pass.view', $t) }}" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/70 rounded-lg text-xs font-medium transition-colors">
+                  👁️ View Pass
+                </a>
               @else
-                <span class="text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Processing...</span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-900/50 text-gray-700 dark:text-gray-400">
+                  Not Issued
+                </span>
               @endif
             </td>
             <td class="px-6 py-4 text-center">
-              @if($t->status === 'paid' && strtotime($t->trip->date . ' ' . $t->trip->depart_time) > time())
+              @if($t->status === 'paid' && !$t->pass_issued_at && strtotime($t->trip->date . ' ' . $t->trip->depart_time) > time())
                 <form action="{{ route('ferry.tickets.cancel', $t->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this ferry ticket?')" class="inline">
                   @csrf
                   @method('DELETE')

@@ -11,8 +11,10 @@
             <p class="text-sm text-slate-600 dark:text-slate-400">View passenger manifests and issue ferry passes</p>
           </div>
         </div>
-        <a href="{{ route('admin.ferry.dashboard') }}" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-          Ferry Dashboard
+        <a href="{{ route('admin.ferry.dashboard') }}" class="group relative bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+          <span class="text-lg">📊</span>
+          <span>Ferry Dashboard</span>
+          <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </a>
       </div>
     </div>
@@ -27,8 +29,10 @@
                    class="rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 focus:border-indigo-500 focus:ring-indigo-500">
           </div>
           <div class="mt-6">
-            <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-              Load Passenger Lists
+            <button type="submit" class="group relative bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+              <span class="text-lg">📋</span>
+              <span>Load Passenger Lists</span>
+              <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
           </div>
         </div>
@@ -46,12 +50,14 @@
           <div class="flex items-center gap-2">
             <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
               <input type="checkbox" name="booking_verification" value="1" checked
-                     class="rounded border-slate-300 dark:border-slate-600 text-cyan-600 focus:ring-cyan-500">
+                     class="rounded border-slate-300 dark:border-slate-600 text-cyan-600 focus:ring-cyan-500 bg-white dark:bg-slate-700">
               Verify hotel booking
             </label>
           </div>
-          <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors">
-            Issue Pass
+          <button type="submit" class="group relative bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white px-6 py-2 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+            <span class="text-lg">🎫</span>
+            <span>Issue Pass</span>
+            <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </button>
         </form>
         @if(session('passData'))
@@ -59,7 +65,9 @@
             <div class="flex items-center gap-2 text-green-700 dark:text-green-400 font-medium mb-2">
               ✅ Ferry Pass Issued Successfully
             </div>
-            @php($pass = session('passData'))
+            @php
+              $pass = session('passData');
+            @endphp
             <div class="text-sm space-y-1">
               <p><strong>Passenger:</strong> {{ $pass['passenger_name'] }}</p>
               <p><strong>Trip:</strong> {{ $pass['trip_details']['origin'] }} → {{ $pass['trip_details']['destination'] }} at {{ date('g:i A', strtotime($pass['trip_details']['depart_time'])) }}</p>
@@ -75,7 +83,7 @@
         @forelse($trips as $trip)
           @php
             $totalPassengers = $trip->tickets->sum('quantity');
-            $occupancyRate = round(($totalPassengers / $trip->capacity) * 100, 1);
+            $occupancyRate = $trip->capacity > 0 ? round(($totalPassengers / $trip->capacity) * 100, 1) : 0;
           @endphp
           <div class="bg-slate-50 dark:bg-slate-700/50 rounded-lg overflow-hidden">
             <div class="p-6 border-b border-slate-200 dark:border-slate-600">
@@ -122,13 +130,6 @@
                   </thead>
                   <tbody class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
                     @foreach($trip->tickets as $ticket)
-                      @php
-                        $hasValidBooking = \App\Models\Booking::where('user_id', $ticket->user_id)
-                          ->where('status', '!=', 'canceled')
-                          ->whereDate('check_in', '<=', $trip->date)
-                          ->whereDate('check_out', '>=', $trip->date)
-                          ->exists();
-                      @endphp
                       <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors">
                         <td class="px-6 py-4 whitespace-nowrap">
                           <div class="flex items-center">
@@ -162,8 +163,8 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                            {{ $hasValidBooking ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400' }}">
-                            {{ $hasValidBooking ? '✅ Valid' : '❌ None' }}
+                            {{ $ticket->hasValidBooking ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400' }}">
+                            {{ $ticket->hasValidBooking ? '✅ Valid' : '❌ None' }}
                           </span>
                         </td>
                       </tr>
