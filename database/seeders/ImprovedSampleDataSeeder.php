@@ -26,6 +26,11 @@ class ImprovedSampleDataSeeder extends Seeder
         FerryTicket::whereHas('user', function($q) use ($preserveEmails) { $q->whereNotIn('email', $preserveEmails); })->delete();
         Booking::whereHas('user', function($q) use ($preserveEmails) { $q->whereNotIn('email', $preserveEmails); })->delete();
         FerryTrip::query()->delete();
+        
+        // Clear hotels and rooms to prevent duplicates
+        \DB::table('rooms')->delete();
+        \DB::table('hotels')->delete();
+        
         User::whereNotIn('email', $preserveEmails)->delete();
         
         // 1. Create sample users
