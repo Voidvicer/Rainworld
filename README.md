@@ -1,10 +1,10 @@
-# Stormshade Island Resort Management System
+# Rainworld Picnic Island Resort Management System
 
-A comprehensive Laravel-based management system for Stormshade Island Resort, featuring complete hotel booking and ferry transportation management with role-based access control.
+A comprehensive Laravel-based management system for Rainworld Picnic Island Resort, featuring complete hotel booking and ferry transportation management with role-based access control.
 
 ## 🏨 System Overview
 
-Stormshade is a full-featured resort management platform designed for island operations, integrating hotel bookings with ferry transportation services. The system provides dedicated interfaces for different staff roles while maintaining a unified guest experience.
+Rainworld Picnic Island is a full-featured resort management platform designed for island operations, integrating hotel bookings with ferry transportation services. The system provides dedicated interfaces for different staff roles while maintaining a unified guest experience.
 
 ## ✨ Core Features
 
@@ -49,7 +49,7 @@ Stormshade is a full-featured resort management platform designed for island ope
 1. **Clone & Setup**
    ```bash
    git clone [repository-url]
-   cd Stormshade
+   cd Rainworld-Picnic-Island
    composer install
    npm install
    ```
@@ -169,7 +169,7 @@ This project follows Laravel coding standards and uses:
 
 ## 📄 License
 
-This project is proprietary software developed for Stormshade Island Resort.
+This project is proprietary software developed for Rainworld Picnic Island Resort.
 
 ## 🆘 Support
 

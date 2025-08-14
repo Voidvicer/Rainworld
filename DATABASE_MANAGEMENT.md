@@ -1,4 +1,4 @@
-# Stormshade Theme Park - Database Management
+# Rainworld Picnic Island - Database Management
 
 This project includes optimized database seeding functionality to speed up development.
 
@@ -104,7 +104,7 @@ The quick-sample command is **6-18x faster** than traditional seeding!
 ## Test Accounts
 
 Use these accounts for testing different roles:
-- **Admin**: admin@stormshade.com / admin123
+- **Admin**: admin@rainworldpicnic.com / admin123
 - **Hotel Manager**: manager@picnic.test / manager123  
 - **Ferry Staff**: ferry@picnic.test / ferry123
 - **Regular Visitor**: visitor@picnic.test / visitor123
