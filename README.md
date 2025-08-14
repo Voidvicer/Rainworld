@@ -1,174 +1,176 @@
-# Island Resort Management System with Laravel
+# Stormshade Island Resort Management System
 
-A comprehensive island resort management system built with Laravel 12, featuring hotel bookings and ferry transportation services.
+A comprehensive Laravel-based management system for Stormshade Island Resort, featuring complete hotel booking and ferry transportation management with role-based access control.
 
-## 🌟 Features
+## 🏨 System Overview
+
+Stormshade is a full-featured resort management platform designed for island operations, integrating hotel bookings with ferry transportation services. The system provides dedicated interfaces for different staff roles while maintaining a unified guest experience.
+
+## ✨ Core Features
 
 ### 🏨 Hotel Management
-- Browse available hotels and rooms
-- Make hotel reservations with date selection
-- View booking history and manage existing bookings
-- Room availability checking
+- **Hotel & Room Management**: Create and manage multiple hotels with detailed room configurations
+- **Intelligent Booking System**: Real-time availability checking with conflict prevention
+- **Dynamic Promotions**: Percentage-based discount system with flexible date ranges
+- **Staff Dashboard**: Comprehensive booking oversight with status management
+- **Revenue Reporting**: Detailed financial analytics and booking trend analysis
 
-### 🚢 Ferry Services
-- Ferry trip scheduling and booking
-- Real-time seat availability tracking
-- Dynamic pricing and time slot selection
-- QR code ticket generation
-- Ticket cancellation with seat liberation
+### ⛴️ Ferry Transportation
+- **Trip Scheduling**: Advanced ferry schedule management with capacity controls
+- **Ticket Booking System**: Individual and bulk ticket purchasing
+- **Digital Pass System**: Secure boarding pass generation and validation
+- **Passenger Manifests**: Real-time passenger lists with ticket code tracking
+- **Revenue Analytics**: Ferry-specific financial reporting and capacity analysis
+- **Staff Validation Tools**: Ticket verification and pass issuance systems
 
-### 👨‍💼 Admin Dashboard
-- Comprehensive booking management
-- Revenue reporting and analytics
-- User role management
+### 👥 User Management & Security
+- **Role-Based Access Control**: Admin, Hotel Staff, Ferry Staff with granular permissions
+- **Secure Authentication**: Laravel Sanctum-powered session management
+- **User Registration**: Streamlined account creation with email verification
+- **Profile Management**: User dashboard with booking history and account settings
 
-## 🛠️ Tech Stack
+### 🔧 Technical Features
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Real-Time Updates**: Live availability and booking status updates
+- **Database Integrity**: SQLite with proper constraints and foreign keys
+- **Error Handling**: Comprehensive logging and user-friendly error messages
+- **Performance Optimized**: Efficient queries and caching strategies
 
-- **Backend**: Laravel 12, PHP 8.2
-- **Database**: SQLite (easily configurable for MySQL/PostgreSQL)
-- **Frontend**: Blade templates with Tailwind CSS
-- **Authentication**: Laravel Breeze
-- **QR Codes**: QR code generation for tickets
-- **Roles & Permissions**: Spatie Laravel Permission
+## 🚀 Quick Start
 
-## 📁 Project Structure
+### Prerequisites
+- PHP 8.2 or higher
+- Composer
+- Node.js & npm
+- SQLite
 
-This is a standard Laravel 12 application with the following key directories:
+### Installation Steps
 
-```
-Island-Resort-Management-Laravel/
-├── app/                 # Application logic (Controllers, Models, etc.)
-│   ├── Http/Controllers/
-│   ├── Models/
-│   └── ...
-├── database/           # Database migrations and seeders
-│   ├── migrations/
-│   └── seeders/
-├── resources/views/    # Blade templates
-├── public/            # Web server document root
-├── routes/            # Application routes
-└── ...               # Standard Laravel directories
-```
-
-## 🚀 Installation
-
-1. **Clone the repository**
+1. **Clone & Setup**
    ```bash
-   git clone https://github.com/Voidvicer/Island-Resort-Management-Laravel.git
-   cd Island-Resort-Management-Laravel
-   ```
-
-2. **Install dependencies and setup**
-   ```bash
+   git clone [repository-url]
+   cd Stormshade
    composer install
    npm install
+   ```
+
+2. **Environment Configuration**
+   ```bash
    cp .env.example .env
    php artisan key:generate
+   ```
+
+3. **Database Setup**
+   ```bash
    php artisan migrate --seed
+   ```
+
+4. **Asset Compilation**
+   ```bash
    npm run build
    ```
 
-3. **Start the development server**
+5. **Launch Application**
    ```bash
    php artisan serve
    ```
 
-4. **Access the application**
-   - Main site: http://localhost:8000
-   - Admin login: admin@admin.com / password
+Visit `http://localhost:8000` to access the application.
 
-## 📊 Database Schema
+## 👤 Test Accounts
 
-### Core Tables
-- **users**: User authentication and profiles
-- **hotels & rooms**: Hotel inventory management
-- **bookings**: Hotel reservation system
-- **ferry_trips & ferry_tickets**: Ferry transportation
+Refer to `TEST_ACCOUNTS.MD` for comprehensive login credentials for all user types.
 
-## 🎫 Key Features Implemented
+## 🏗️ System Architecture
 
-### Dynamic Seat Management
-- Real-time ferry seat tracking
-- Automatic seat liberation on cancellation
-- Color-coded availability indicators
+### Technology Stack
+- **Backend**: Laravel 11 with PHP 8.2
+- **Database**: SQLite with optimized schema design
+- **Frontend**: Blade templates with Tailwind CSS
+- **JavaScript**: Alpine.js for reactive components
+- **Build Tool**: Vite for asset optimization
+- **Authentication**: Laravel Sanctum
+- **Permissions**: Spatie Laravel Permission package
 
-### Professional UI/UX
-- Responsive design with Tailwind CSS
-- Dark/light mode compatibility
-- Professional gradient styling
-- Consistent button designs
+### Database Schema
+- **Users & Roles**: User authentication with role-based permissions
+- **Hotels & Rooms**: Multi-hotel support with room management
+- **Bookings**: Hotel reservation system with status tracking
+- **Ferry System**: Trips, tickets, and pass issuance
+- **Locations & Promotions**: Geographic data and marketing tools
 
-### QR Code Integration
-- Unique QR codes for all ticket types
-- Easy validation system
-- SVG format for scalability
+## 📋 Management Interfaces
 
-### Role-Based Access
-- Admin dashboard for management
-- User-specific booking views
-- Permission-based feature access
+### Admin Dashboard
+- System-wide analytics and reporting
+- User management and role assignment
+- Global settings and configuration
+- Cross-system data export capabilities
 
-## 🔧 Configuration
+### Hotel Staff Interface
+- Room availability and booking management
+- Guest check-in/check-out procedures
+- Promotion setup and management
+- Hotel-specific reporting
 
-### Environment Variables
-Key configurations in `.env`:
-- Database settings
-- Application URL
-- Mail configuration (for notifications)
+### Ferry Staff Interface
+- Trip scheduling and capacity management
+- Ticket validation and pass issuance
+- Passenger manifest generation
+- Ferry-specific analytics
 
-### Database Setup
-The application uses SQLite by default for easy setup, but can be configured for MySQL or PostgreSQL.
+## 🔧 Development Tools
 
-## 🧪 Sample Data
+### Console Commands
+- `php artisan app:reset-database` - Reset and reseed database
+- `php artisan app:show-test-accounts` - Display test account information
+- `php artisan route:list` - View all application routes
+- `php artisan migrate:fresh --seed` - Fresh database migration
 
-The application includes comprehensive seeders with:
-- Sample hotels and rooms
-- Ferry trip schedules
-- User accounts (admin and regular users)
-- Sample bookings
+### Database Management
+- SQLite browser for direct database access
+- Comprehensive seeders for test data
+- Migration files with proper foreign key constraints
+- Factory classes for data generation
 
-## 📝 API Endpoints
+## 📚 Project Structure
 
-### Public Routes
-- `/` - Homepage
-- `/hotels` - Hotel listings
-- `/ferry/trips` - Ferry schedules
+```
+app/
+├── Http/Controllers/     # Request handling logic
+│   ├── Admin/           # Administrative interfaces
+│   ├── Auth/            # Authentication controllers
+│   └── ...              # Core application controllers
+├── Models/              # Eloquent data models
+├── Middleware/          # Request middleware
+└── Providers/           # Service providers
 
-### Authenticated Routes
-- `/bookings` - User booking history
-- `/ferry/tickets` - Ferry ticket management
-- `/dashboard` - User dashboard
+resources/
+├── views/               # Blade templates
+│   ├── manage/         # Staff management interfaces
+│   ├── auth/           # Authentication views
+│   └── components/     # Reusable components
+├── css/                # Tailwind CSS styles
+└── js/                 # Alpine.js components
 
-### Admin Routes
-- `/admin` - Admin dashboard
-- `/manage/*` - Various management interfaces
+database/
+├── migrations/         # Database schema definitions
+├── seeders/           # Data seeding classes
+└── factories/         # Model factories
+```
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+This project follows Laravel coding standards and uses:
+- PSR-4 autoloading
+- Semantic versioning
+- Conventional commit messages
+- Comprehensive test coverage
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is proprietary software developed for Stormshade Island Resort.
 
 ## 🆘 Support
 
-For support and questions:
-- Create an issue in this repository
-- Contact: [Your contact information]
-
-## 🎯 Recent Updates
-
-- ✅ Fixed ferry seat counting system
-- ✅ Implemented dynamic trip rendering
-- ✅ Enhanced button styling consistency
-- ✅ Fixed database constraint errors
-- ✅ Improved QR code generation system
-
----
-
-**Built with ❤️ using Laravel 12 and modern web technologies**
+For technical support or feature requests, please refer to the `IMPLEMENTATION_SUMMARY.md` file for detailed system documentation and troubleshooting guides.
