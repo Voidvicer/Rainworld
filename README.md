@@ -2,20 +2,20 @@
 
 A comprehensive Laravel-based management system for Rainworld Picnic Island Resort, featuring complete hotel booking and ferry transportation management with role-based access control.
 
-## 🏨 System Overview
+## System Overview
 
 Rainworld Picnic Island is a full-featured resort management platform designed for island operations, integrating hotel bookings with ferry transportation services. The system provides dedicated interfaces for different staff roles while maintaining a unified guest experience.
 
-## ✨ Core Features
+## Core Features
 
-### 🏨 Hotel Management
+### Hotel Management
 - **Hotel & Room Management**: Create and manage multiple hotels with detailed room configurations
 - **Intelligent Booking System**: Real-time availability checking with conflict prevention
 - **Dynamic Promotions**: Percentage-based discount system with flexible date ranges
 - **Staff Dashboard**: Comprehensive booking oversight with status management
 - **Revenue Reporting**: Detailed financial analytics and booking trend analysis
 
-### ⛴️ Ferry Transportation
+### Ferry Transportation
 - **Trip Scheduling**: Advanced ferry schedule management with capacity controls
 - **Ticket Booking System**: Individual and bulk ticket purchasing
 - **Digital Pass System**: Secure boarding pass generation and validation
@@ -23,20 +23,20 @@ Rainworld Picnic Island is a full-featured resort management platform designed f
 - **Revenue Analytics**: Ferry-specific financial reporting and capacity analysis
 - **Staff Validation Tools**: Ticket verification and pass issuance systems
 
-### 👥 User Management & Security
+### User Management & Security
 - **Role-Based Access Control**: Admin, Hotel Staff, Ferry Staff with granular permissions
 - **Secure Authentication**: Laravel Sanctum-powered session management
 - **User Registration**: Streamlined account creation with email verification
 - **Profile Management**: User dashboard with booking history and account settings
 
-### 🔧 Technical Features
+### Technical Features
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Real-Time Updates**: Live availability and booking status updates
 - **Database Integrity**: SQLite with proper constraints and foreign keys
 - **Error Handling**: Comprehensive logging and user-friendly error messages
 - **Performance Optimized**: Efficient queries and caching strategies
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - PHP 8.2 or higher
@@ -77,11 +77,11 @@ Rainworld Picnic Island is a full-featured resort management platform designed f
 
 Visit `http://localhost:8000` to access the application.
 
-## 👤 Test Accounts
+## Test Accounts
 
 Refer to `TEST_ACCOUNTS.MD` for comprehensive login credentials for all user types.
 
-## 🏗️ System Architecture
+## System Architecture
 
 ### Technology Stack
 - **Backend**: Laravel 11 with PHP 8.2
@@ -99,7 +99,7 @@ Refer to `TEST_ACCOUNTS.MD` for comprehensive login credentials for all user typ
 - **Ferry System**: Trips, tickets, and pass issuance
 - **Locations & Promotions**: Geographic data and marketing tools
 
-## 📋 Management Interfaces
+## Management Interfaces
 
 ### Admin Dashboard
 - System-wide analytics and reporting
@@ -119,7 +119,7 @@ Refer to `TEST_ACCOUNTS.MD` for comprehensive login credentials for all user typ
 - Passenger manifest generation
 - Ferry-specific analytics
 
-## 🔧 Development Tools
+## Development Tools
 
 ### Console Commands
 - `php artisan app:reset-database` - Reset and reseed database
@@ -133,7 +133,7 @@ Refer to `TEST_ACCOUNTS.MD` for comprehensive login credentials for all user typ
 - Migration files with proper foreign key constraints
 - Factory classes for data generation
 
-## 📚 Project Structure
+## Project Structure
 
 ```
 app/
@@ -159,7 +159,7 @@ database/
 └── factories/         # Model factories
 ```
 
-## 🤝 Contributing
+## Contributing
 
 This project follows Laravel coding standards and uses:
 - PSR-4 autoloading
@@ -167,10 +167,10 @@ This project follows Laravel coding standards and uses:
 - Conventional commit messages
 - Comprehensive test coverage
 
-## 📄 License
+## License
 
 This project is proprietary software developed for Rainworld Picnic Island Resort.
 
-## 🆘 Support
+## Support
 
 For technical support or feature requests, please refer to the `IMPLEMENTATION_SUMMARY.md` file for detailed system documentation and troubleshooting guides.

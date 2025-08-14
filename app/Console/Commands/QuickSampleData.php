@@ -27,13 +27,13 @@ class QuickSampleData extends Command
     public function handle()
     {
         if (!$this->option('force')) {
-            if (!$this->confirm('🗑️  This will replace existing sample data. Continue?')) {
+            if (!$this->confirm('This will replace existing sample data. Continue?')) {
                 $this->info('Operation cancelled.');
                 return 0;
             }
         }
         
-        $this->info('🚀 Loading sample data using optimized seeder...');
+        $this->info('Loading sample data using optimized seeder...');
         $startTime = microtime(true);
         
         try {
@@ -44,7 +44,7 @@ class QuickSampleData extends Command
             $duration = round(microtime(true) - $startTime, 2);
             
             $this->newLine();
-            $this->info("✅ Sample data loaded successfully in {$duration} seconds!");
+            $this->info("Sample data loaded successfully in {$duration} seconds!");
             
             // Show some stats
             $userCount = \DB::table('users')->count();
@@ -54,20 +54,20 @@ class QuickSampleData extends Command
             
             $this->newLine();
             $this->table(
-                ['📊 Data Type', '🔢 Count'],
+                ['Data Type', 'Count'],
                 [
-                    ['👥 Total Users', number_format($userCount)],
-                    ['🏨 Hotel Bookings', number_format($bookingCount)],
-                    ['⛴️ Ferry Trips', number_format($ferryTripCount)],
-                    ['🎫 Ferry Tickets', number_format($ferryTicketCount)],
+                    ['Total Users', number_format($userCount)],
+                    ['Hotel Bookings', number_format($bookingCount)],
+                    ['Ferry Trips', number_format($ferryTripCount)],
+                    ['Ferry Tickets', number_format($ferryTicketCount)],
                 ]
             );
             
             $this->newLine();
-            $this->line('🎯 <fg=green>Ready for testing and development!</>');
+            $this->line('<fg=green>Ready for testing and development!</>');
             
         } catch (\Exception $e) {
-            $this->error('❌ Error loading sample data: ' . $e->getMessage());
+            $this->error('Error loading sample data: ' . $e->getMessage());
             return 1;
         }
         

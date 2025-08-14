@@ -18,10 +18,10 @@ class ImprovedSampleDataSeeder extends Seeder
 {
     public function run()
     {
-        $this->command->info('🏗️  Creating improved sample data...');
+        $this->command->info('Creating improved sample data...');
         
         // Clear existing data (except admin users and test accounts)
-        $this->command->info('🗑️  Clearing existing sample data...');
+        $this->command->info('Clearing existing sample data...');
         $preserveEmails = ['admin@stormshade.com', 'admin@picnic.test', 'manager@picnic.test', 'ferry@picnic.test', 'visitor@picnic.test'];
         FerryTicket::whereHas('user', function($q) use ($preserveEmails) { $q->whereNotIn('email', $preserveEmails); })->delete();
         Booking::whereHas('user', function($q) use ($preserveEmails) { $q->whereNotIn('email', $preserveEmails); })->delete();
@@ -34,34 +34,34 @@ class ImprovedSampleDataSeeder extends Seeder
         User::whereNotIn('email', $preserveEmails)->delete();
         
         // 1. Create sample users
-        $this->command->info('👥 Creating sample users...');
+        $this->command->info('Creating sample users...');
         $users = $this->createSampleUsers();
         
         // 2. Create locations if they don't exist
-        $this->command->info('📍 Creating locations...');
+        $this->command->info('Creating locations...');
         $this->createLocations();
         
         // 3. Create 6 hotels with 2 room types each
-        $this->command->info('🏨 Creating 6 hotels with room types...');
+        $this->command->info('Creating 6 hotels with room types...');
         $this->createHotelsAndRooms();
 
         // 4. Create ferry trips with proper capacity (200)
-        $this->command->info('⛴️  Creating ferry trips...');
+        $this->command->info('Creating ferry trips...');
         $this->createFerryTrips();
         
         // 5. Create hotel bookings (spread over July 18 - August 18)
-        $this->command->info('🛏️  Creating hotel bookings...');
+        $this->command->info('Creating hotel bookings...');
         $this->createHotelBookings($users);
         
         // 6. Create ferry tickets (only for users with valid hotel bookings)
-        $this->command->info('🎫 Creating ferry tickets...');
+        $this->command->info('Creating ferry tickets...');
         $this->createFerryTickets($users);
         
         // 7. Create promotions
-        $this->command->info('🎁 Creating promotions...');
+        $this->command->info('Creating promotions...');
         $this->createPromotions();
         
-        $this->command->info('✅ Improved sample data created successfully!');
+        $this->command->info('Improved sample data created successfully!');
     }
     
     private function createSampleUsers()

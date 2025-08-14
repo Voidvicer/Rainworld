@@ -1,4 +1,4 @@
-# Setup Instructions for Island Resort Management System
+# Setup Instructions for Rainworld Picnic Island Resort Management System
 
 ## Quick Setup for Development
 
@@ -34,22 +34,20 @@ php artisan key:generate
 
 ### 4. Database Setup
 ```bash
-# Create SQLite database file
-touch database/database.sqlite
-
-# Run migrations
+# The SQLite database file is already included
+# Run migrations to set up the database structure
 php artisan migrate
 
-# Seed the database with sample data
+# Seed the database with sample data using the improved seeder
 php artisan db:seed
 
-# OR load improved sample data
+# OR load optimized sample data with the quick command
 php artisan db:quick-sample --force
 ```
 
 ### 5. Build Assets
 ```bash
-# Build frontend assets
+# Build frontend assets for production
 npm run build
 
 # OR for development with hot reload
@@ -58,7 +56,7 @@ npm run dev
 
 ### 6. Storage Setup
 ```bash
-# Create storage symlink
+# Create storage symlink for file uploads
 php artisan storage:link
 ```
 
@@ -69,7 +67,7 @@ php artisan serve
 
 Visit `http://127.0.0.1:8000` in your browser.
 
-## Default Accounts
+## Default Test Accounts
 
 After seeding, you can login with these test accounts:
 
@@ -78,47 +76,54 @@ After seeding, you can login with these test accounts:
 - **Ferry Staff**: `ferry@picnic.test` / `password`
 - **Visitor**: `visitor@picnic.test` / `password`
 
-## Features Overview
+## System Features
 
-### 🏨 Hotel Management
-- Browse and book hotel rooms
-- View availability and pricing
-- Manage reservations
-- Apply promotional discounts
+### Hotel Management
+- Browse and book hotel rooms across 6 different resort properties
+- Real-time availability checking and pricing
+- Manage reservations with status tracking
+- Apply promotional discounts and special offers
+- Comprehensive booking reports and analytics
 
-### 🚢 Ferry Services  
-- Book ferry tickets between locations
-- Issue boarding passes for validated tickets
-- Manage passenger lists and trip schedules
-- QR code-based ticket system
+### Ferry Transportation Services  
+- Book ferry tickets between Male City and Rainworld Picnic Island
+- Digital boarding pass system with QR codes
+- Ferry staff can issue and validate boarding passes
+- Passenger manifest generation and management
+- Real-time trip capacity and scheduling management
 
-### 👨‍💼 Staff Management
-- Role-based access control
-- Hotel and ferry management dashboards
-- Reporting and analytics
-- Passenger validation and pass issuance
+### Administrative Features
+- Role-based access control (Admin, Hotel Staff, Ferry Staff)
+- Comprehensive management dashboards for all services
+- Revenue reporting and analytics across all operations
+- User management and permission assignment
+- System-wide configuration and settings
 
 ## Troubleshooting
 
 ### Missing Build Files
-If you get asset errors, run:
+If you get asset loading errors:
 ```bash
 npm run build
 ```
 
 ### Database Issues
-If you have database problems, reset it:
+If you encounter database problems, reset everything:
 ```bash
+# Fresh migration with improved sample data
 php artisan migrate:fresh --seed
+
+# OR use the quick sample data command
+php artisan db:quick-sample --force
 ```
 
 ### Permission Issues
-On Linux/Mac, you may need to set permissions:
+On Linux/Mac systems, set proper permissions:
 ```bash
 chmod -R 775 storage bootstrap/cache
 ```
 
-### Clear Cache
+### Clear Application Cache
 If you experience unexpected behavior:
 ```bash
 php artisan config:clear
@@ -132,36 +137,66 @@ php artisan route:clear
 For production deployment:
 
 1. Set `APP_ENV=production` and `APP_DEBUG=false` in `.env`
-2. Configure proper database credentials
-3. Run `php artisan config:cache` to cache configuration
-4. Set up proper web server (Apache/Nginx) configuration
-5. Configure SSL certificates
-6. Set up proper file permissions
-7. Configure backup strategies
+2. Configure proper database credentials (MySQL/PostgreSQL recommended)
+3. Run `php artisan config:cache` to optimize configuration
+4. Set up proper web server (Apache/Nginx) configuration  
+5. Configure SSL certificates for secure communication
+6. Set up proper file permissions and ownership
+7. Configure automated backup strategies
+8. Set up monitoring and logging systems
 
-## Additional Commands
+## Available Console Commands
 
-### Sample Data Management
+### Database Management
 ```bash
-# Quick load sample data
+# Load optimized sample data quickly
 php artisan db:quick-sample
 
-# Load from SQL dump
-php artisan db:load-dump
+# Reset and reload all data
+php artisan app:reset-database
 
-# Create new sample data dump
-php create_database_dump.php
+# Show test account information
+php artisan app:show-test-accounts
 ```
 
-### Maintenance
+### System Maintenance
 ```bash
-# Put app in maintenance mode
+# Put application in maintenance mode
 php artisan down
 
-# Bring app back online  
+# Bring application back online  
 php artisan up
 
-# Check system health
+# View all available routes
 php artisan route:list
+
+# Process background jobs (if using queues)
 php artisan queue:work
 ```
+
+### Development Utilities
+```bash
+# Interactive shell for testing
+php artisan tinker
+
+# Run automated tests
+php artisan test
+
+# Generate IDE helper files (if using laravel-ide-helper)
+php artisan ide-helper:generate
+```
+
+## System Architecture
+
+### Technology Stack
+- **Backend**: Laravel 11 with PHP 8.2
+- **Database**: SQLite (development) / MySQL or PostgreSQL (production)
+- **Frontend**: Blade templates with Tailwind CSS and Alpine.js
+- **Build Tool**: Vite for asset compilation
+- **Authentication**: Laravel Sanctum with role-based permissions
+
+### Key Components
+- **Hotel System**: Multi-property management with room types and availability
+- **Ferry System**: Transportation scheduling with digital ticketing
+- **User Management**: Role-based access with Spatie Laravel Permission
+- **Reporting**: Comprehensive analytics for all business operations
