@@ -1,4 +1,4 @@
-# Test Accounts for Stormshade Application
+# Test Accounts for Rainworld Picnic Island Application
 
 This file contains all the test accounts created by the database seeder for development and testing purposes.
 
