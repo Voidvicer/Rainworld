@@ -22,7 +22,6 @@
       </div>
     </div>
     <div class="flex items-center gap-3">
-      <button @click="document.documentElement.classList.toggle('dark'); localStorage.setItem('pp_dark',document.documentElement.classList.contains('dark')?'1':'0')" class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-xs font-semibold" title="Toggle Dark Mode">🌓</button>
       @auth
         <span class="hidden sm:inline text-xs uppercase tracking-wide bg-white/10 px-2 py-1 rounded-full">{{ implode(',', auth()->user()->getRoleNames()->toArray()) }}</span>
         <span class="font-medium">Hi, {{ auth()->user()->name }}</span>

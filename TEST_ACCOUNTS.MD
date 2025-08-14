@@ -62,10 +62,3 @@ To check role assignments and debug authentication issues:
 1. Login with any account above
 2. Navigate to `/debug-roles` in your browser
 3. This will show your current user info and assigned roles
-
-## Usage Notes
-
-- These accounts are created automatically when running `php artisan db:seed`
-- All accounts are for development/testing only
-- The seeder checks for existing accounts before creating duplicates
-- Roles are managed using the Spatie Permission package

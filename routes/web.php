@@ -124,6 +124,8 @@ Route::middleware(['auth', \App\Http\Middleware\RoleMiddleware::class.':admin'])
     Route::delete('/admin/ads/{id}', [AdminController::class, 'deleteAd'])->name('admin.ads.delete');
     Route::get('/admin/map', [AdminController::class, 'map'])->name('admin.map');
     Route::post('/admin/map', [AdminController::class, 'storeLocation'])->name('admin.map.store');
+    Route::patch('/admin/map/{id}/toggle', [AdminController::class, 'toggleLocationStatus'])->name('admin.map.toggle');
+    Route::delete('/admin/map/{id}', [AdminController::class, 'deleteLocation'])->name('admin.map.delete');
     
     // User Management Routes
     Route::resource('/admin/users', UserManagementController::class)->names([

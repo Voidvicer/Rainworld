@@ -42,8 +42,9 @@
             <option value="Airport → Male City" {{ request('route') == 'Airport → Male City' ? 'selected' : '' }}>Airport → Male City</option>
           </select>
         </div>
-        <div>
-          <button type="submit" class="group relative bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <div class="flex flex-col">
+          <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 opacity-0" aria-hidden="true">Generate</label>
+          <button type="submit" class="group relative bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white px-6 py-0 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 h-12">
             <span class="text-lg">🔍</span>
             <span>Generate Report</span>
             <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

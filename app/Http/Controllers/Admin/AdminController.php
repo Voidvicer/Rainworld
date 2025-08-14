@@ -268,11 +268,32 @@ class AdminController extends Controller
     }
 
     public function map(){ $locations = Location::latest()->paginate(20); return view('admin.map', compact('locations')); }
+    
     public function storeLocation(){
-        request()->validate(['name'=>'required','lat'=>'required|numeric','lng'=>'required|numeric','description'=>'nullable','category'=>'nullable','active'=>'boolean']);
+        request()->validate([
+            'name'=>'required',
+            'lat'=>'required|numeric',
+            'lng'=>'required|numeric',
+            'description'=>'nullable',
+            'category'=>'nullable'
+        ]);
         $data = request()->only(['name','lat','lng','description','category']);
-        $data['active'] = request()->boolean('active');
+        $data['active'] = request()->has('active') ? true : false;
         Location::create($data);
         return back()->with('success','Location saved.');
+    }
+    
+    public function toggleLocationStatus($id) {
+        $location = Location::findOrFail($id);
+        $location->active = !$location->active;
+        $location->save();
+        $status = $location->active ? 'activated' : 'deactivated';
+        return back()->with('success', "Location {$status} successfully.");
+    }
+    
+    public function deleteLocation($id) {
+        $location = Location::findOrFail($id);
+        $location->delete();
+        return back()->with('success', 'Location deleted successfully.');
     }
 }

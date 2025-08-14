@@ -185,18 +185,3 @@ php artisan test
 # Generate IDE helper files (if using laravel-ide-helper)
 php artisan ide-helper:generate
 ```
-
-## System Architecture
-
-### Technology Stack
-- **Backend**: Laravel 11 with PHP 8.2
-- **Database**: SQLite (development) / MySQL or PostgreSQL (production)
-- **Frontend**: Blade templates with Tailwind CSS and Alpine.js
-- **Build Tool**: Vite for asset compilation
-- **Authentication**: Laravel Sanctum with role-based permissions
-
-### Key Components
-- **Hotel System**: Multi-property management with room types and availability
-- **Ferry System**: Transportation scheduling with digital ticketing
-- **User Management**: Role-based access with Spatie Laravel Permission
-- **Reporting**: Comprehensive analytics for all business operations

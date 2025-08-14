@@ -135,7 +135,7 @@
 </div>
 
 <!-- Management Links -->
-<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-12">
   <a href="{{ route('admin.users.index') }}" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 grid place-content-center text-xl">👥</div>

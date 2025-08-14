@@ -184,4 +184,27 @@
     }
   });
 </script>
+
+<!-- Quick Actions (same as Availability page) -->
+<div class="grid gap-4 sm:grid-cols-2 mt-8">
+  <a href="{{ route('manage.hotel.reports.advanced') }}" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/50 grid place-content-center text-xl">📊</div>
+      <div>
+        <div class="font-semibold text-slate-900 dark:text-slate-100">Booking Reports</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">Detailed booking analytics</div>
+      </div>
+    </div>
+  </a>
+
+  <a href="{{ route('manage.bookings') }}" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 grid place-content-center text-xl">🎫</div>
+      <div>
+        <div class="font-semibold text-slate-900 dark:text-slate-100">Booking Management</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">Manage current bookings</div>
+      </div>
+    </div>
+  </a>
+</div>
 @endsection

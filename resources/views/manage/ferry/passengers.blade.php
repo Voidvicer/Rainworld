@@ -141,9 +141,6 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                           <div class="flex items-center justify-center gap-2">
-                            <button onclick="viewTicketDetails('{{ $ticket->code }}')" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" title="View Ticket Details">
-                              👁️
-                            </button>
                             @if($ticket->pass_issued_at)
                               <a href="{{ route('manage.ferry.pass.view', $ticket->id) }}" target="_blank" class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300" title="View Ferry Pass">
                                 🎫
@@ -211,43 +208,4 @@
   </a>
 </div>
 
-<script>
-function viewTicketDetails(ticketCode) {
-  // Create a simple modal to show ticket details
-  const modal = document.createElement('div');
-  modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
-  modal.innerHTML = `
-    <div class="bg-white dark:bg-slate-800 rounded-lg p-6 max-w-md w-full mx-4 relative">
-      <button onclick="this.closest('div[class*=\"fixed\"]').remove()" class="absolute top-4 right-4 text-slate-500 hover:text-slate-700 text-xl">&times;</button>
-      
-      <div class="text-center mb-4">
-        <div class="text-4xl mb-2">🎫</div>
-        <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">Ticket Details</h3>
-      </div>
-      
-      <div class="space-y-3 text-sm">
-        <div class="flex justify-between">
-          <span class="text-slate-600 dark:text-slate-400">Ticket Code:</span>
-          <span class="font-medium font-mono text-slate-900 dark:text-slate-100">${ticketCode}</span>
-        </div>
-      </div>
-      
-      <div class="mt-6">
-        <button onclick="this.closest('div[class*=\"fixed\"]').remove()" class="w-full bg-slate-500 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-          Close
-        </button>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(modal);
-  
-  // Close on backdrop click
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.remove();
-    }
-  });
-}
-</script>
 @endsection

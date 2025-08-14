@@ -11,18 +11,10 @@
             <p class="text-sm text-slate-600 dark:text-slate-400">Validate tickets and issue QR boarding passes to passengers</p>
           </div>
         </div>
-                <a href="{{ route('manage.ferry.dashboard') }}" class="group relative bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700">
-          <span class="text-lg">⛴️</span>
+        <a href="{{ route('manage.ferry.dashboard') }}" class="group relative bg-yellow-500 hover:bg-yellow-600 border border-yellow-600 text-black px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
+          <span class="text-sm">⛴️</span>
           <span>Ferry Dashboard</span>
-          <div class="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </a>
-        
-        @if(config('app.debug'))
-        <a href="{{ route('manage.ferry.test.system') }}" target="_blank" class="group relative bg-yellow-500 hover:bg-yellow-600 border border-yellow-600 text-black px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
-          <span class="text-sm">🔧</span>
-          <span>Test System</span>
-        </a>
-        @endif
       </div>
     </div>
     

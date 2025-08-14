@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +14,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-slate-100/60 dark:bg-slate-900" x-data x-init="if(localStorage.getItem('pp_dark')==='1'){document.documentElement.classList.add('dark')}">
+    <body class="font-sans antialiased bg-slate-100/60 dark:bg-slate-900" x-data>>
         @include('components.nav')
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-10 sm:pt-16">
             <div>

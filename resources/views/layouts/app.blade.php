@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,11 +15,11 @@
   </style>
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="min-h-full bg-slate-100/60 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col" x-data="{ }" x-init="if(localStorage.getItem('pp_dark')==='1'){document.documentElement.classList.add('dark')}" >
+<body class="min-h-full bg-slate-100/60 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col" x-data="{ }">
   @include('components.nav')
 
   <main class="flex-1 w-full">
-    <div class="max-w-7xl mx-auto p-4 md:p-6">
+    <div class="max-w-7xl mx-auto p-4 md:p-6 pb-16 md:pb-20">
       @if (session('success'))<div class="mb-4 p-3 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">{{ session('success') }}</div>@endif
       @if ($errors->any())
         <div class="mb-4 p-3 rounded bg-rose-50 text-rose-700 border border-rose-200"><ul class="list-disc list-inside space-y-1">@foreach ($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
