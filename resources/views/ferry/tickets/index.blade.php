@@ -60,7 +60,7 @@
             <td class="px-6 py-4 text-right font-bold text-lg text-slate-800 dark:text-slate-200">${{ number_format($t->total_amount,2) }}</td>
             <td class="px-6 py-4 text-center">
               @if($t->pass_issued_at)
-                <a href="{{ route('manage.ferry.pass.view', $t) }}" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/70 rounded-lg text-xs font-medium transition-colors">
+                <a href="{{ route('ferry.pass.view', $t) }}" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/70 rounded-lg text-xs font-medium transition-colors">
                   👁️ View Pass
                 </a>
               @else

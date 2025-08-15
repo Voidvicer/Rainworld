@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/ferry/trips/{trip}/tickets', [FerryTicketController::class, 'store'])->name('ferry.tickets.store');
     Route::get('/ferry/tickets', [FerryTicketController::class, 'index'])->name('ferry.tickets.index');
     Route::delete('/ferry/tickets/{ferry_ticket}', [FerryTicketController::class, 'cancel'])->name('ferry.tickets.cancel');
+    Route::get('/ferry/pass/{ticket}', [TicketValidationController::class, 'viewUserPass'])->name('ferry.pass.view');
 
 
 });

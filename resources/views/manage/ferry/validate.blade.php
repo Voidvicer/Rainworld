@@ -28,7 +28,7 @@
                    class="rounded-lg border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 focus:border-indigo-500 focus:ring-indigo-500">
           </div>
           <div class="mt-6">
-            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-2">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-sm">
               <span class="text-lg">🔍</span>
               <span>Load Tickets</span>
             </button>
@@ -36,7 +36,7 @@
         </form>
         
         <div class="flex gap-2">
-          <button id="bulkIssueBtn" disabled class="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white px-6 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-2 disabled:cursor-not-allowed">
+          <button id="bulkIssueBtn" disabled class="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white px-6 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2 disabled:cursor-not-allowed shadow-md">
             <span class="text-lg">🎫</span>
             <span>Issue Passes</span>
           </button>
@@ -295,7 +295,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const selectAllBtn = document.getElementById('selectAll');
     const ticketCheckboxes = document.querySelectorAll('.ticket-checkbox');
-    const bulkValidateBtn = document.getElementById('bulkValidateBtn');
     const bulkIssueBtn = document.getElementById('bulkIssueBtn');
     
     // Select all functionality
@@ -324,37 +323,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const checkedBoxes = document.querySelectorAll('.ticket-checkbox:checked');
         const hasSelection = checkedBoxes.length > 0;
         
-        bulkValidateBtn.disabled = !hasSelection;
         bulkIssueBtn.disabled = !hasSelection;
     }
-    
-    // Bulk validate
-    bulkValidateBtn.addEventListener('click', function() {
-        const selectedIds = Array.from(document.querySelectorAll('.ticket-checkbox:checked')).map(cb => cb.value);
-        
-        fetch('{{ route('manage.ferry.bulk.validate') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                ticket_ids: selectedIds
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showValidationResults(data.results);
-            } else {
-                alert('Error validating tickets');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error validating tickets');
-        });
-    });
     
     // Bulk issue passes
     bulkIssueBtn.addEventListener('click', function() {

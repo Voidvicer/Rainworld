@@ -8,12 +8,12 @@
 - Node.js and npm
 - Git
 
-### 1. Clone the Repository
+### 1. If downloaded from zip file:
 ```bash
-git clone https://github.com/Voidvicer/Theme-Park-Web-App-with-Laravel.git
-cd Theme-Park-Web-App-with-Laravel
+# You can directly run server as everything should be set.
+pho artisan serve 
+# Please be patient as it may take 30 seconds to load for the first time.
 ```
-
 ### 2. Install Dependencies
 ```bash
 # Install PHP dependencies
@@ -76,29 +76,6 @@ After seeding, you can login with these test accounts:
 - **Ferry Staff**: `ferry@picnic.test` / `password`
 - **Visitor**: `visitor@picnic.test` / `password`
 
-## System Features
-
-### Hotel Management
-- Browse and book hotel rooms across 6 different resort properties
-- Real-time availability checking and pricing
-- Manage reservations with status tracking
-- Apply promotional discounts and special offers
-- Comprehensive booking reports and analytics
-
-### Ferry Transportation Services  
-- Book ferry tickets between Male City and Rainworld Picnic Island
-- Digital boarding pass system with QR codes
-- Ferry staff can issue and validate boarding passes
-- Passenger manifest generation and management
-- Real-time trip capacity and scheduling management
-
-### Administrative Features
-- Role-based access control (Admin, Hotel Staff, Ferry Staff)
-- Comprehensive management dashboards for all services
-- Revenue reporting and analytics across all operations
-- User management and permission assignment
-- System-wide configuration and settings
-
 ## Troubleshooting
 
 ### Missing Build Files
@@ -132,21 +109,6 @@ php artisan view:clear
 php artisan route:clear
 ```
 
-## Production Deployment
-
-For production deployment:
-
-1. Set `APP_ENV=production` and `APP_DEBUG=false` in `.env`
-2. Configure proper database credentials (MySQL/PostgreSQL recommended)
-3. Run `php artisan config:cache` to optimize configuration
-4. Set up proper web server (Apache/Nginx) configuration  
-5. Configure SSL certificates for secure communication
-6. Set up proper file permissions and ownership
-7. Configure automated backup strategies
-8. Set up monitoring and logging systems
-
-## Available Console Commands
-
 ### Database Management
 ```bash
 # Load optimized sample data quickly
@@ -157,31 +119,4 @@ php artisan app:reset-database
 
 # Show test account information
 php artisan app:show-test-accounts
-```
-
-### System Maintenance
-```bash
-# Put application in maintenance mode
-php artisan down
-
-# Bring application back online  
-php artisan up
-
-# View all available routes
-php artisan route:list
-
-# Process background jobs (if using queues)
-php artisan queue:work
-```
-
-### Development Utilities
-```bash
-# Interactive shell for testing
-php artisan tinker
-
-# Run automated tests
-php artisan test
-
-# Generate IDE helper files (if using laravel-ide-helper)
-php artisan ide-helper:generate
 ```
