@@ -207,6 +207,14 @@ class TicketValidationController extends Controller
             abort(404, 'Ferry pass not found or not issued.');
         }
 
+        // Only allow viewing if:
+        // - user is admin or ferry_staff
+        // - OR user owns the ticket
+        $user = auth()->user();
+        if (!$user || (!$user->hasRole(['admin', 'ferry_staff']) && $ticket->user_id !== $user->id)) {
+            abort(403, 'You do not have permission to view this ferry pass.');
+        }
+
         // Load relationships
         $ticket->load(['user', 'trip']);
 

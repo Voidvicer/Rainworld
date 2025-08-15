@@ -49,7 +49,7 @@ Rainworld Picnic Island is a full-featured resort management platform designed f
 1. **Clone & Setup**
    ```bash
    git clone [repository-url]
-   cd Rainworld-Picnic-Island
+   cd Rainworld
    composer install
    npm install
    ```

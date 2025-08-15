@@ -36,10 +36,6 @@
         </form>
         
         <div class="flex gap-2">
-          <button id="bulkValidateBtn" disabled class="bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white px-6 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-2 disabled:cursor-not-allowed">
-            <span class="text-lg">🔍</span>
-            <span>Validate Selected</span>
-          </button>
           <button id="bulkIssueBtn" disabled class="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white px-6 py-2.5 rounded-lg font-medium transition-colors flex items-center gap-2 disabled:cursor-not-allowed">
             <span class="text-lg">🎫</span>
             <span>Issue Passes</span>
